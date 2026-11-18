@@ -3,6 +3,7 @@ const nextConfig = {
   /* config options here */
   experimental: {
     serverActions: { bodySizeLimit: '3mb' },
+    staleTimes: { dynamic: 0 },
   },
   turbopack: {
     rules: {

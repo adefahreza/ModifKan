@@ -21,6 +21,7 @@ export async function createCategoryAction(prevState, formData) {
     throw err;
   }
   revalidatePath('/admin/categories');
+  revalidatePath('/seller', 'layout');
   return { errors: {}, values: { name: '' }, saved: Date.now() };
 }
 
@@ -37,6 +38,7 @@ export async function updateCategoryAction(id, prevState, formData) {
   }
   if (rowCount === 0) return { errors: {}, values, message: 'Kategori tidak ditemukan' };
   revalidatePath('/admin/categories');
+  revalidatePath('/seller', 'layout');
   return { errors: {}, values, saved: Date.now() };
 }
 
@@ -50,5 +52,6 @@ export async function deleteCategoryAction(id) {
     throw err;
   }
   revalidatePath('/admin/categories');
+  revalidatePath('/seller', 'layout');
   return {};
 }

@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import Field from "@/components/ui/Field";
 import Button from "@/components/ui/Button";
 import ImageInput from "@/components/dashboard/ImageInput";
-import SubmitButton from "@/components/SubmitButton";
 
 export default function ProductForm({ action, categories, product, imageUrl }) {
-  const [state, formAction] = useActionState(action, {
+  const [state, formAction, pending] = useActionState(action, {
     errors: {},
     values: {
       name: product?.name ?? "",
@@ -19,8 +18,15 @@ export default function ProductForm({ action, categories, product, imageUrl }) {
     },
   });
   const v = state.values;
+
+  // Kirim manual agar React tidak mereset form (gambar & pilihan hilang) saat ada error validasi.
+  function onSubmit(e) {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    startTransition(() => formAction(data));
+  }
   return (
-    <form action={formAction} className="mt-5 max-w-xl space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200" noValidate>
+    <form onSubmit={onSubmit} className="mt-5 max-w-xl space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200" noValidate>
       {state.message ? <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.message}</p> : null}
       <Field label="Nama produk" name="name" defaultValue={v.name} error={state.errors.name} />
       <div>
@@ -45,7 +51,7 @@ export default function ProductForm({ action, categories, product, imageUrl }) {
       </div>
       <ImageInput label="Gambar produk" currentUrl={imageUrl} error={state.errors.image} required={!product} />
       <div className="flex gap-2">
-        <SubmitButton>Simpan</SubmitButton>
+        <Button type="submit" disabled={pending}>{pending ? "Menyimpan…" : "Simpan"}</Button>
         <Button as={Link} href="/seller/products" variant="secondary">Batal</Button>
       </div>
     </form>
