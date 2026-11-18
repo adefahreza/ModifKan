@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { query } from "@/lib/db";
 import { requireApprovedSeller } from "@/lib/auth";
@@ -18,7 +19,8 @@ export default async function EditProductPage({ params }) {
   if (!rows[0]) notFound();
   return (
     <>
-      <h1 className="font-display text-3xl font-bold uppercase">Edit Produk</h1>
+      <nav aria-label="Breadcrumb" className="text-sm text-slate-500"><Link href="/seller/products" className="hover:text-slate-900">Produk</Link> / <span aria-current="page" className="text-slate-900">Edit Produk</span></nav>
+      <h1 className="mt-1 font-display text-3xl font-bold uppercase">Edit Produk</h1>
       <ProductForm action={updateProductAction.bind(null, rows[0].id)} categories={categories} product={rows[0]} imageUrl={imageUrl(rows[0].image)} />
     </>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { startTransition, useActionState } from "react";
 import { updateStoreAction } from "@/lib/actions/stores";
 import Field from "@/components/ui/Field";
@@ -25,7 +26,10 @@ export default function StoreForm({ store, imageUrl }) {
           className="block w-full rounded-lg bg-white px-3 py-2 text-base ring-1 ring-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500" />
       </div>
       <ImageInput label="Gambar toko" currentUrl={imageUrl} error={state.errors.image} />
-      <Button type="submit" disabled={pending}>{pending ? "Menyimpan…" : "Simpan"}</Button>
+      <div className="flex gap-2">
+        <Button type="submit" disabled={pending}>{pending ? "Menyimpan…" : "Simpan"}</Button>
+        <Button as={Link} href="/seller/store" variant="secondary">Batal</Button>
+      </div>
     </form>
   );
 }
