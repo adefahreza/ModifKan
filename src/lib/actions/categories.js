@@ -46,7 +46,7 @@ export async function deleteCategoryAction(id) {
     const { rowCount } = await query('categories/delete', [Number(id)]);
     if (rowCount === 0) return { message: 'Kategori tidak ditemukan' };
   } catch (err) {
-    if (err.code === '23503') return { message: 'Kategori masih dipakai produk, tidak bisa dihapus' };
+    if (['23001', '23503'].includes(err.code)) return { message: 'Kategori masih dipakai produk, tidak bisa dihapus' };
     throw err;
   }
   revalidatePath('/admin/categories');

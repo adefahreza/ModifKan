@@ -38,7 +38,7 @@ export async function createProductAction(prevState, formData) {
     await query('products/create', [user.storeId, values.categoryId, values.name, values.description, values.price, values.stock, imageName]);
   } catch (err) {
     await deleteImage(imageName);
-    if (err.code === '23503') return { errors: { categoryId: 'Kategori tidak ditemukan' }, values: echo(values) };
+    if (['23001', '23503'].includes(err.code)) return { errors: { categoryId: 'Kategori tidak ditemukan' }, values: echo(values) };
     throw err;
   }
   revalidatePath('/seller', 'layout');
@@ -61,7 +61,7 @@ export async function updateProductAction(productId, prevState, formData) {
     ({ rowCount } = await query('products/update', [id, user.storeId, values.categoryId, values.name, values.description, values.price, values.stock, newName]));
   } catch (err) {
     if (newName) await deleteImage(newName);
-    if (err.code === '23503') return { errors: { categoryId: 'Kategori tidak ditemukan' }, values: echo(values) };
+    if (['23001', '23503'].includes(err.code)) return { errors: { categoryId: 'Kategori tidak ditemukan' }, values: echo(values) };
     throw err;
   }
   if (rowCount === 0) {
