@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { createCategoryAction, updateCategoryAction } from "@/lib/actions/categories";
 import Field from "@/components/ui/Field";
 import Button from "@/components/ui/Button";
@@ -17,18 +17,18 @@ export function CreateCategoryForm() {
 }
 
 export function EditCategory({ category }) {
-  const [editing, setEditing] = useState(false);
+  const [openAt, setOpenAt] = useState(null);
   const [state, formAction] = useActionState(updateCategoryAction.bind(null, category.id), {
     errors: {}, values: { name: category.name },
   });
-  useEffect(() => { if (state.saved) setEditing(false); }, [state.saved]);
+  const editing = openAt !== null && openAt.saved === state.saved;
 
-  if (!editing) return <Button size="sm" variant="secondary" onClick={() => setEditing(true)}>Edit</Button>;
+  if (!editing) return <Button size="sm" variant="secondary" onClick={() => setOpenAt({ saved: state.saved })}>Edit</Button>;
   return (
     <form action={formAction} className="flex items-start gap-2" noValidate>
       <Field label="Nama" name="name" defaultValue={state.values.name} error={state.errors.name || state.message} aria-label={`Nama kategori ${category.name}`} />
       <SubmitButton size="sm" className="mt-6">Simpan</SubmitButton>
-      <Button size="sm" variant="ghost" className="mt-6" onClick={() => setEditing(false)}>Batal</Button>
+      <Button size="sm" variant="ghost" className="mt-6" onClick={() => setOpenAt(null)}>Batal</Button>
     </form>
   );
 }
