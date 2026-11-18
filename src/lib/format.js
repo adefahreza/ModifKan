@@ -21,4 +21,8 @@ export function formatDate(date) {
   return `${get('day')} ${BULAN[get('month') - 1]} ${get('year')}`;
 }
 
+export function imageUrl(name) {
+  return name ? `/api/images/${name}` : null;
+}
+
 export { groupThousands };
