@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { validateRegister, validateLogin, isPhone, intInRange, isImageFile, normalizeEmail, hasErrors } from '../src/lib/validators.js';
+import { validateRegister, validateLogin, isPhone, intInRange, isImageFile, normalizeEmail, hasErrors,
+  validateCategory, validateStore, validateProduct, validateUserEdit } from '../src/lib/validators.js';
 
 test('register buyer valid', () => {
   const { values, errors } = validateRegister({ role: 'buyer', name: ' Budi ', email: ' Budi@Mail.com ',
@@ -53,4 +54,40 @@ test('normalizeEmail & hasErrors', () => {
   assert.equal(normalizeEmail(' Budi@Mail.COM '), 'budi@mail.com');
   assert.equal(hasErrors({}), false);
   assert.equal(hasErrors({ a: 'x' }), true);
+});
+
+test('kategori', () => {
+  assert.equal(validateCategory({ name: '  ' }).errors.name, 'Nama kategori wajib diisi');
+  assert.equal(validateCategory({ name: 'x'.repeat(51) }).errors.name, 'Nama kategori maksimal 50 karakter');
+  assert.equal(validateCategory({ name: ' Turbo ' }).values.name, 'Turbo');
+});
+test('produk baru valid', () => {
+  const img = { size: 1000, type: 'image/png', name: 'a.png' };
+  const { values, errors } = validateProduct({ name: ' Velg ', description: 'Cocok untuk: Civic', price: '4250000',
+    stock: '0', categoryId: '3', image: img }, { isEdit: false });
+  assert.deepEqual(errors, {});
+  assert.equal(values.price, 4250000); assert.equal(values.stock, 0); assert.equal(values.categoryId, 3);
+});
+test('produk error per field', () => {
+  const { errors } = validateProduct({ name: '', description: '', price: '999', stock: '100001', categoryId: 'abc',
+    image: { size: 0 } }, { isEdit: false });
+  assert.equal(errors.name, 'Nama produk wajib diisi');
+  assert.equal(errors.description, 'Deskripsi wajib diisi');
+  assert.equal(errors.price, 'Harga harus antara 1.000 dan 1.000.000.000');
+  assert.equal(errors.stock, 'Stok harus antara 0 dan 100.000');
+  assert.equal(errors.categoryId, 'Kategori wajib dipilih');
+  assert.equal(errors.image, 'Gambar wajib diunggah');
+});
+test('edit produk tanpa gambar baru boleh', () => {
+  const { errors } = validateProduct({ name: 'A', description: 'B', price: '1000', stock: '1', categoryId: '1',
+    image: { size: 0 } }, { isEdit: true });
+  assert.deepEqual(errors, {});
+});
+test('toko', () => {
+  const { values, errors } = validateStore({ name: ' Garasi ', description: '  ', image: { size: 0 } });
+  assert.deepEqual(errors, {}); assert.equal(values.description, null);
+});
+test('edit user', () => {
+  const { values, errors } = validateUserEdit({ name: 'A', email: ' A@B.CO ', phone: '0812 3456 7890' });
+  assert.deepEqual(errors, {}); assert.equal(values.email, 'a@b.co'); assert.equal(values.phone, '081234567890');
 });

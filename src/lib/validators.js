@@ -91,3 +91,57 @@ export function validateLogin(input) {
   if (values.password === '') errors.password = 'Password wajib diisi';
   return { values, errors };
 }
+
+export function validateCategory(input) {
+  const values = { name: str(input.name).trim() };
+  const errors = {};
+  const e = first(required(values.name, 'Nama kategori'), maxLength(values.name, 50, 'Nama kategori'));
+  if (e) errors.name = e;
+  return { values, errors };
+}
+
+export function validateStore(input) {
+  const description = str(input.description).trim();
+  const values = { name: str(input.name).trim(), description: description === '' ? null : description };
+  const errors = {};
+  const set = (field, msg) => { if (msg) errors[field] = msg; };
+  set('name', first(required(values.name, 'Nama toko'), maxLength(values.name, 100, 'Nama toko')));
+  set('image', isImageFile(input.image));
+  return { values, errors };
+}
+
+export function validateProduct(input, { isEdit = false } = {}) {
+  const values = {
+    name: str(input.name).trim(),
+    description: str(input.description).trim(),
+    price: str(input.price).trim(),
+    stock: str(input.stock).trim(),
+    categoryId: str(input.categoryId).trim(),
+  };
+  const errors = {};
+  const set = (field, msg) => { if (msg) errors[field] = msg; };
+  set('name', first(required(values.name, 'Nama produk'), maxLength(values.name, 150, 'Nama produk')));
+  set('description', required(values.description, 'Deskripsi'));
+  set('price', first(required(values.price, 'Harga'), intInRange(values.price, 1000, 1000000000, 'Harga')));
+  set('stock', first(required(values.stock, 'Stok'), intInRange(values.stock, 0, 100000, 'Stok')));
+  if (!/^\d+$/.test(values.categoryId) || Number(values.categoryId) < 1) errors.categoryId = 'Kategori wajib dipilih';
+  set('image', isImageFile(input.image, { required: !isEdit }));
+  if (!errors.price) values.price = Number(values.price);
+  if (!errors.stock) values.stock = Number(values.stock);
+  if (!errors.categoryId) values.categoryId = Number(values.categoryId);
+  return { values, errors };
+}
+
+export function validateUserEdit(input) {
+  const values = {
+    name: str(input.name).trim(),
+    email: normalizeEmail(input.email),
+    phone: str(input.phone).replace(/[\s-]/g, ''),
+  };
+  const errors = {};
+  const set = (field, msg) => { if (msg) errors[field] = msg; };
+  set('name', first(required(values.name, 'Nama'), maxLength(values.name, 100, 'Nama')));
+  set('email', first(required(values.email, 'Email'), isEmail(values.email), maxLength(values.email, 255, 'Email')));
+  set('phone', first(required(values.phone, 'Nomor HP'), isPhone(values.phone)));
+  return { values, errors };
+}
