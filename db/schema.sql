@@ -36,6 +36,8 @@ CREATE TABLE categories (
   name       VARCHAR(50) NOT NULL UNIQUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+-- Nama kategori unik tanpa membedakan huruf besar/kecil ("Turbo" = "turbo").
+CREATE UNIQUE INDEX idx_categories_name_lower ON categories (lower(name));
 
 CREATE TABLE products (
   id          SERIAL PRIMARY KEY,
