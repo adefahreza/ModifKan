@@ -1,4 +1,5 @@
 import { requireRole } from "@/lib/auth";
+import { query } from "@/lib/db";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 
 const ITEMS = [
@@ -12,8 +13,11 @@ const ITEMS = [
 
 export default async function AdminLayout({ children }) {
   const user = await requireRole("admin");
+  const { rows } = await query("admin/stats");
+  const pending = rows[0].sellers_pending;
+  const items = ITEMS.map((i) => (i.href === "/admin/sellers" && pending > 0 ? { ...i, badge: pending } : i));
   return (
-    <DashboardShell title="ADMIN" items={ITEMS} user={{ name: user.name }}>
+    <DashboardShell title="ADMIN" items={items} user={{ name: user.name }}>
       {children}
     </DashboardShell>
   );
