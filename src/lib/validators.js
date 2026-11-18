@@ -110,11 +110,16 @@ export function validateStore(input) {
   return { values, errors };
 }
 
+// "10.000" / "1.250.000" -> "10000" / "1250000". Pola lain dibiarkan agar tetap ditolak.
+function normalizeThousands(value) {
+  return /^\d{1,3}(\.\d{3})+$/.test(value) ? value.replace(/\./g, '') : value;
+}
+
 export function validateProduct(input, { isEdit = false } = {}) {
   const values = {
     name: str(input.name).trim(),
     description: str(input.description).trim(),
-    price: str(input.price).trim(),
+    price: normalizeThousands(str(input.price).trim()),
     stock: str(input.stock).trim(),
     categoryId: str(input.categoryId).trim(),
   };

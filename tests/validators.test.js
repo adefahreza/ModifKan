@@ -91,3 +91,14 @@ test('edit user', () => {
   const { values, errors } = validateUserEdit({ name: 'A', email: ' A@B.CO ', phone: '0812 3456 7890' });
   assert.deepEqual(errors, {}); assert.equal(values.email, 'a@b.co'); assert.equal(values.phone, '081234567890');
 });
+
+test('harga boleh bertitik pemisah ribuan', () => {
+  const base = { name: 'A', description: 'B', stock: '1', categoryId: '1', image: { size: 0 } };
+  const ok = (price) => validateProduct({ ...base, price }, { isEdit: true });
+  assert.equal(ok('10.000').values.price, 10000);
+  assert.deepEqual(ok('10.000').errors, {});
+  assert.equal(ok('1.250.000').values.price, 1250000);
+  assert.equal(ok('10.5').errors.price, 'Harga harus bilangan bulat');
+  assert.equal(ok('1.00').errors.price, 'Harga harus bilangan bulat');
+  assert.equal(ok('999').errors.price, 'Harga harus antara 1.000 dan 1.000.000.000');
+});
