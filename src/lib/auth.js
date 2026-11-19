@@ -72,3 +72,11 @@ export async function requireApprovedSeller() {
   if (user.role !== 'seller' || user.storeStatus !== 'approved') redirect(homePathFor(user));
   return user;
 }
+
+// Untuk route handler JSON: mengembalikan { user } atau { response } (401 untuk Guest, 403 untuk peran lain).
+export async function requireRoleApi(...roles) {
+  const user = await getCurrentUser();
+  if (!user) return { response: Response.json({ error: 'Silakan masuk terlebih dahulu' }, { status: 401 }) };
+  if (!roles.includes(user.role)) return { response: Response.json({ error: 'Anda tidak punya akses' }, { status: 403 }) };
+  return { user };
+}

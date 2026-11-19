@@ -4,6 +4,7 @@ import { logoutAction } from "@/lib/actions/auth";
 import { homePathFor } from "@/lib/auth-rules";
 import Logo from "@/components/Logo";
 import Button from "@/components/ui/Button";
+import CartBadge from "./CartBadge";
 
 const iconLink = "relative inline-flex size-11 items-center justify-center rounded-lg text-white hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500";
 
@@ -33,11 +34,9 @@ export default function Navbar({ user, cartCount = 0 }) {
           </form>
 
           <Link href="/account/wishlist" aria-label="Wishlist" className={`${iconLink} hidden lg:inline-flex`}><Heart size={22} /></Link>
-          <Link href="/cart" aria-label={`Keranjang, ${cartCount} item`} className={iconLink}>
+          <Link href="/cart" aria-label="Keranjang" className={iconLink}>
             <ShoppingCart size={22} />
-            {cartCount > 0 ? (
-              <span className="absolute right-0.5 top-0.5 flex min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-bold text-white">{cartCount}</span>
-            ) : null}
+            <CartBadge initial={cartCount} />
           </Link>
 
           {!user ? (
