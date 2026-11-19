@@ -119,3 +119,12 @@ test('ganti password', () => {
   assert.equal(errors.confirmPassword, 'Konfirmasi password tidak sama');
   assert.deepEqual(validatePasswordChange({ oldPassword: 'a', newPassword: 'rahasia123', confirmPassword: 'rahasia123' }).errors, {});
 });
+
+test('batas password dihitung dalam byte (batas bcrypt 72 byte)', () => {
+  const emoji = '😀'.repeat(20); // 40 unit JS, 80 byte
+  assert.equal(validatePasswordChange({ oldPassword: 'a', newPassword: emoji, confirmPassword: emoji }).errors.newPassword, 'Password terlalu panjang');
+  const ascii = 'a'.repeat(72);
+  assert.equal(validatePasswordChange({ oldPassword: 'a', newPassword: ascii, confirmPassword: ascii }).errors.newPassword, undefined);
+  assert.equal(validateRegister({ role: 'buyer', name: 'Budi', email: 'b@mail.com', phone: '081234567890',
+    password: emoji, confirmPassword: emoji }).errors.password, 'Password terlalu panjang');
+});

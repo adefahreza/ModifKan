@@ -31,6 +31,11 @@ export function maxLength(value, n, label) {
   return str(value).length > n ? `${label} maksimal ${n} karakter` : null;
 }
 
+// bcrypt hanya memakai 72 byte pertama; huruf non-ASCII/emoji bisa lebih dari 1 byte.
+export function maxBytes(value, n, label) {
+  return new TextEncoder().encode(str(value)).length > n ? `${label} terlalu panjang` : null;
+}
+
 export function isPhone(value) {
   const cleaned = str(value).replace(/[\s-]/g, '');
   return PHONE_RE.test(cleaned) ? null : 'Nomor HP tidak valid (contoh: 081234567890)';
@@ -74,7 +79,7 @@ export function validateRegister(input) {
   set('password', first(
     values.password === '' ? 'Password wajib diisi' : null,
     minLength(values.password, 8, 'Password'),
-    maxLength(values.password, 72, 'Password'),
+    maxBytes(values.password, 72, 'Password'),
   ));
   if (values.confirmPassword !== values.password) errors.confirmPassword = 'Konfirmasi password tidak sama';
   if (role === 'seller') {
@@ -174,7 +179,7 @@ export function validatePasswordChange(input) {
   set('newPassword', first(
     values.newPassword === '' ? 'Password baru wajib diisi' : null,
     minLength(values.newPassword, 8, 'Password'),
-    maxLength(values.newPassword, 72, 'Password'),
+    maxBytes(values.newPassword, 72, 'Password'),
   ));
   if (values.confirmPassword !== values.newPassword) errors.confirmPassword = 'Konfirmasi password tidak sama';
   return { values, errors };

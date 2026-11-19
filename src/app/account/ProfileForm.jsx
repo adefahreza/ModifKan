@@ -16,7 +16,7 @@ export default function ProfileForm({ user }) {
     startTransition(() => formAction(data));
   }
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200">
+    <form key={state.savedAt ?? 0} onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl bg-white p-5 ring-1 ring-slate-200">
       <h2 className="font-display text-xl font-bold uppercase">Data diri</h2>
       <Field label="Nama" name="name" defaultValue={state.values.name} error={state.errors.name} autoComplete="name" />
       <Field label="Email" name="email" type="email" defaultValue={state.values.email} error={state.errors.email} autoComplete="email" />

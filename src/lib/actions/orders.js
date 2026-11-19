@@ -58,11 +58,11 @@ async function runTransition(sqlName, orderId, ownerId, action, actor) {
       })
     : (await query(sqlName, params)).rowCount > 0;
 
-  if (!changed) return { message: 'Status pesanan sudah berubah' };
+  // Revalidate juga saat gagal, supaya halaman yang basi ikut menampilkan status terbaru.
   revalidatePath('/account/orders', 'layout');
   revalidatePath('/seller', 'layout');
   revalidatePath('/admin/orders', 'layout');
-  return {};
+  return changed ? {} : { message: 'Status pesanan sudah berubah' };
 }
 
 export async function buyerOrderAction(orderId, action) {

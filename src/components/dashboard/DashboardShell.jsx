@@ -28,7 +28,7 @@ function Sidebar({ title, items, user, pathname, onNavigate }) {
               className={`flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-semibold transition-colors ${active ? "bg-red-600 text-white" : "text-slate-300 hover:bg-slate-800"}`}>
               <Icon size={18} aria-hidden="true" />
               <span className="flex-1">{label}</span>
-              {badge ? <span className="rounded-full bg-red-600 px-2 text-xs">{badge}</span> : null}
+              {badge ? <span className={`rounded-full px-2 text-xs ${active ? "bg-white text-red-600" : "bg-red-600 text-white"}`}>{badge}</span> : null}
             </Link>
           );
         })}
