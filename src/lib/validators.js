@@ -150,3 +150,14 @@ export function validateUserEdit(input) {
   set('phone', first(required(values.phone, 'Nomor HP'), isPhone(values.phone)));
   return { values, errors };
 }
+
+export function validateReview(input) {
+  const raw = str(input.rating).trim();
+  const rating = /^[1-5]$/.test(raw) ? Number(raw) : null;
+  const values = { rating, comment: str(input.comment).trim() };
+  const errors = {};
+  const set = (field, msg) => { if (msg) errors[field] = msg; };
+  set('rating', raw === '' ? 'Rating wajib dipilih' : rating === null ? 'Rating harus antara 1 dan 5' : null);
+  set('comment', first(required(values.comment, 'Komentar'), minLength(values.comment, 5, 'Komentar'), maxLength(values.comment, 1000, 'Komentar')));
+  return { values, errors };
+}

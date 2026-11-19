@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validateRegister, validateLogin, isPhone, intInRange, isImageFile, normalizeEmail, hasErrors,
-  validateCategory, validateStore, validateProduct, validateUserEdit } from '../src/lib/validators.js';
+  validateCategory, validateStore, validateProduct, validateUserEdit, validateReview } from '../src/lib/validators.js';
 
 test('register buyer valid', () => {
   const { values, errors } = validateRegister({ role: 'buyer', name: ' Budi ', email: ' Budi@Mail.com ',
@@ -101,4 +101,13 @@ test('harga boleh bertitik pemisah ribuan', () => {
   assert.equal(ok('10.5').errors.price, 'Harga harus bilangan bulat');
   assert.equal(ok('1.00').errors.price, 'Harga harus bilangan bulat');
   assert.equal(ok('999').errors.price, 'Harga harus antara 1.000 dan 1.000.000.000');
+});
+
+test('ulasan', () => {
+  assert.deepEqual(validateReview({ rating: '5', comment: ' Mantap, pas! ' }).values, { rating: 5, comment: 'Mantap, pas!' });
+  const { errors } = validateReview({ rating: '6', comment: 'ok' });
+  assert.equal(errors.rating, 'Rating harus antara 1 dan 5');
+  assert.equal(errors.comment, 'Komentar minimal 5 karakter');
+  assert.equal(validateReview({ rating: '', comment: 'x'.repeat(1001) }).errors.comment, 'Komentar maksimal 1000 karakter');
+  assert.equal(validateReview({ rating: '', comment: 'bagus sekali' }).errors.rating, 'Rating wajib dipilih');
 });

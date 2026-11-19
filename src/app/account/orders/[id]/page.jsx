@@ -10,6 +10,7 @@ import OrderSummary from "@/components/orders/OrderSummary";
 import OrderTimeline from "@/components/orders/OrderTimeline";
 import OrderItemsList from "@/components/orders/OrderItemsList";
 import OrderActions from "@/components/orders/OrderActions";
+import ReviewForm from "@/components/orders/ReviewForm";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,12 @@ export default async function BuyerOrderDetailPage({ params }) {
     run: buyerOrderAction.bind(null, order.id, name),
   }));
 
+  const renderReview = (item) => {
+    if (item.reviewed) return <p className="text-sm font-semibold text-emerald-700">Sudah diulas</p>;
+    if (item.product_id == null) return <p className="text-sm text-slate-500">Produk sudah dihapus</p>;
+    return <ReviewForm orderItemId={item.id} />;
+  };
+
   return (
     <div className="space-y-4">
       <Link href="/account/orders" className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-slate-600 hover:text-red-600">
@@ -41,7 +48,7 @@ export default async function BuyerOrderDetailPage({ params }) {
       </Link>
       <OrderSummary order={order} party={{ label: "Toko", name: order.store_name ?? "Toko telah dihapus" }} />
       <OrderTimeline status={order.status} />
-      <OrderItemsList items={items} />
+      <OrderItemsList items={items} renderItemExtra={order.status === "selesai" ? renderReview : undefined} />
       <OrderActions actions={actions} />
     </div>
   );
