@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { query, withTransaction } from '../db.js';
-import { requireRole } from '../auth.js';
+import { requireApprovedSeller, requireRole } from '../auth.js';
 import { planCheckout } from '../cart-rules.js';
 import { resolveTransition } from '../order-rules.js';
 
@@ -68,4 +68,9 @@ async function runTransition(sqlName, orderId, ownerId, action, actor) {
 export async function buyerOrderAction(orderId, action) {
   const user = await requireRole('buyer');
   return runTransition('orders/transition-buyer', orderId, user.id, action, 'buyer');
+}
+
+export async function sellerOrderAction(orderId, action) {
+  const user = await requireApprovedSeller();
+  return runTransition('orders/transition-store', orderId, user.storeId, action, 'seller');
 }
