@@ -161,3 +161,21 @@ export function validateReview(input) {
   set('comment', first(required(values.comment, 'Komentar'), minLength(values.comment, 5, 'Komentar'), maxLength(values.comment, 1000, 'Komentar')));
   return { values, errors };
 }
+
+export function validatePasswordChange(input) {
+  const values = {
+    oldPassword: str(input.oldPassword),
+    newPassword: str(input.newPassword),
+    confirmPassword: str(input.confirmPassword),
+  };
+  const errors = {};
+  const set = (field, msg) => { if (msg) errors[field] = msg; };
+  set('oldPassword', values.oldPassword === '' ? 'Password lama wajib diisi' : null);
+  set('newPassword', first(
+    values.newPassword === '' ? 'Password baru wajib diisi' : null,
+    minLength(values.newPassword, 8, 'Password'),
+    maxLength(values.newPassword, 72, 'Password'),
+  ));
+  if (values.confirmPassword !== values.newPassword) errors.confirmPassword = 'Konfirmasi password tidak sama';
+  return { values, errors };
+}

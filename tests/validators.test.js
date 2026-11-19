@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validateRegister, validateLogin, isPhone, intInRange, isImageFile, normalizeEmail, hasErrors,
-  validateCategory, validateStore, validateProduct, validateUserEdit, validateReview } from '../src/lib/validators.js';
+  validateCategory, validateStore, validateProduct, validateUserEdit, validateReview, validatePasswordChange } from '../src/lib/validators.js';
 
 test('register buyer valid', () => {
   const { values, errors } = validateRegister({ role: 'buyer', name: ' Budi ', email: ' Budi@Mail.com ',
@@ -110,4 +110,12 @@ test('ulasan', () => {
   assert.equal(errors.comment, 'Komentar minimal 5 karakter');
   assert.equal(validateReview({ rating: '', comment: 'x'.repeat(1001) }).errors.comment, 'Komentar maksimal 1000 karakter');
   assert.equal(validateReview({ rating: '', comment: 'bagus sekali' }).errors.rating, 'Rating wajib dipilih');
+});
+
+test('ganti password', () => {
+  const { errors } = validatePasswordChange({ oldPassword: '', newPassword: 'pendek', confirmPassword: 'lain' });
+  assert.equal(errors.oldPassword, 'Password lama wajib diisi');
+  assert.equal(errors.newPassword, 'Password minimal 8 karakter');
+  assert.equal(errors.confirmPassword, 'Konfirmasi password tidak sama');
+  assert.deepEqual(validatePasswordChange({ oldPassword: 'a', newPassword: 'rahasia123', confirmPassword: 'rahasia123' }).errors, {});
 });
