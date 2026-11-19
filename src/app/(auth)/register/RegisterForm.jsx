@@ -10,9 +10,9 @@ const ROLES = [
   { value: "seller", label: "Penjual" },
 ];
 
-export default function RegisterForm() {
+export default function RegisterForm({ initialRole = "buyer" }) {
   const [state, formAction] = useActionState(registerAction, { errors: {}, values: {} });
-  const [role, setRole] = useState(state.values.role === "seller" ? "seller" : "buyer");
+  const [role, setRole] = useState(state.values.role ? (state.values.role === "seller" ? "seller" : "buyer") : initialRole);
   const v = state.values;
   const e = state.errors;
   return (

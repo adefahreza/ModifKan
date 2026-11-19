@@ -24,7 +24,7 @@ export default async function Home() {
 
   return (
     <div className="space-y-8">
-      <section className="stripe-red relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 px-6 py-12 sm:px-10 sm:py-16">
+      <section className="stripe-red relative overflow-hidden rounded-xl bg-slate-900 px-6 py-12 sm:px-10 sm:py-16">
         <div aria-hidden="true" className="absolute -right-16 -top-16 size-64 rounded-full border-[28px] border-slate-700/40" />
         <div className="relative max-w-xl">
           <h1 className="font-display text-5xl font-extrabold uppercase italic leading-none text-white sm:text-6xl">
@@ -33,7 +33,7 @@ export default async function Home() {
           <p className="mt-4 text-slate-300">Sparepart dan part modifikasi mobil dari banyak toko terverifikasi, dalam satu keranjang.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button as={Link} href="/products" size="lg">Belanja sekarang</Button>
-            <Button as={Link} href="/register" size="lg" variant="secondary">Buka toko</Button>
+            {user ? null : <Button as={Link} href="/register?role=seller" size="lg" variant="secondary">Buka toko</Button>}
           </div>
         </div>
       </section>

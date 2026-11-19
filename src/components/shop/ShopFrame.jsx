@@ -11,7 +11,7 @@ export default async function ShopFrame({ children }) {
     <div className="flex min-h-screen flex-col pb-16 lg:pb-0">
       <Navbar user={user} cartCount={cartCount} />
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6">{children}</main>
-      <Footer />
+      <Footer showSellerLink={!user} />
       <BottomNav />
     </div>
   );
