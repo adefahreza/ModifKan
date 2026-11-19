@@ -20,7 +20,7 @@ INSERT INTO users (name, email, phone, password_hash, role) VALUES
   ('Bagas Pratama',  'bagas@modifkan.test',       '081200000009', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'buyer'),
   ('Joko Garasi',    'garasijaya@modifkan.test',  '081200000003', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
   ('Dewi Speed',     'speedshop@modifkan.test',   '081200000004', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
-  ('Kaka Kuat',      'kakikuat@modifkan.test',    '081200000005', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
+  ('Kaki Kuat',      'kakikuat@modifkan.test',    '081200000005', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
   ('Tono Turbo',     'turbolokal@modifkan.test',  '081200000006', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
   ('Bayu Bengkel',   'bengkelasal@modifkan.test', '081200000007', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller');
 
