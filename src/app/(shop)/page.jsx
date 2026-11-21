@@ -22,6 +22,8 @@ export default async function Home() {
     query(isBuyer ? "products/random" : "products/latest", [10]),
   ]);
 
+  const wishlistIds = isBuyer ? (await query("wishlist/ids", [user.id])).rows.map((r) => r.product_id) : [];
+
   return (
     <div className="space-y-8">
       <section className="stripe-red relative overflow-hidden rounded-xl bg-slate-900 px-6 py-12 sm:px-10 sm:py-16">
@@ -65,7 +67,7 @@ export default async function Home() {
           <h2 id="produk" className="font-display text-2xl font-bold uppercase text-slate-900">{isBuyer ? "Rekomendasi untukmu" : "Produk terbaru"}</h2>
           <Link href="/products" className="text-sm font-semibold text-red-600 hover:underline">Lihat semua</Link>
         </div>
-        <ProductGrid products={products} showCart={!user || isBuyer} empty={<p className="text-slate-600">Belum ada produk.</p>} />
+        <ProductGrid products={products} showCart={!user || isBuyer} wishlistIds={wishlistIds} empty={<p className="text-slate-600">Belum ada produk.</p>} />
       </section>
     </div>
   );

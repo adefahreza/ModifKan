@@ -1,7 +1,8 @@
 import { PackageSearch } from "lucide-react";
 import ProductCard from "./ProductCard";
 
-export default function ProductGrid({ products, empty, showCart = true }) {
+export default function ProductGrid({ products, empty, showCart = true, showWishlist = showCart, wishlistIds = [] }) {
+  const saved = new Set(wishlistIds);
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center gap-3 rounded-xl bg-white px-6 py-14 text-center ring-1 ring-slate-200">
@@ -12,7 +13,7 @@ export default function ProductGrid({ products, empty, showCart = true }) {
   }
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
-      {products.map((p) => <ProductCard key={p.id} product={p} showCart={showCart} />)}
+      {products.map((p) => <ProductCard key={p.id} product={p} showCart={showCart} showWishlist={showWishlist} saved={saved.has(p.id)} />)}
     </div>
   );
 }

@@ -4,11 +4,13 @@ import AddToCartButton from "./AddToCartButton";
 import CategoryIcon from "./CategoryIcon";
 import RatingStars from "./RatingStars";
 import StockLabel from "./StockLabel";
+import WishlistButton from "./WishlistButton";
 
-export default function ProductCard({ product, showCart = true }) {
+export default function ProductCard({ product, showCart = true, showWishlist = false, saved = false }) {
   const p = product;
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl bg-white ring-1 ring-slate-200 transition-shadow duration-200 hover:shadow-xl">
+      <div className="relative">
       <Link href={`/products/${p.id}`} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
         <div className="relative aspect-square overflow-hidden bg-slate-100">
           {p.image ? (
@@ -22,6 +24,8 @@ export default function ProductCard({ product, showCart = true }) {
           <StockLabel stock={p.stock} className="absolute right-2 top-2" />
         </div>
       </Link>
+      {showWishlist ? <WishlistButton productId={p.id} initialSaved={saved} className="absolute bottom-2 right-2" /> : null}
+      </div>
       <div className="flex flex-1 flex-col gap-1 p-3">
         <Link href={`/products/${p.id}`} className="line-clamp-2 min-h-10 text-sm font-semibold text-slate-900 hover:text-red-600">{p.name}</Link>
         <p className="truncate text-xs text-slate-500">{p.store_name}</p>

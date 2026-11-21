@@ -11,6 +11,13 @@ export function parseCartBody(body) {
   return { productId, qty };
 }
 
+export function parseProductIdBody(body) {
+  if (!body || typeof body !== 'object') return { error: 'Data tidak valid' };
+  const { productId } = body;
+  if (!isInt(productId, 1, 2147483647)) return { error: 'Data tidak valid' };
+  return { productId };
+}
+
 export function groupCartByStore(rows) {
   const byStore = new Map();
   let total = 0;

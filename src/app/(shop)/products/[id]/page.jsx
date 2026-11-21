@@ -8,6 +8,7 @@ import BuyBox from "@/components/shop/BuyBox";
 import CategoryIcon from "@/components/shop/CategoryIcon";
 import RatingStars from "@/components/shop/RatingStars";
 import StockLabel from "@/components/shop/StockLabel";
+import WishlistButton from "@/components/shop/WishlistButton";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ export default async function ProductDetailPage({ params }) {
 
   const [user, { rows: reviews }] = await Promise.all([getCurrentUser(), query("reviews/list-by-product", [p.id])]);
   const canBuy = !user || user.role === "buyer";
+  const saved = user?.role === "buyer" && (await query("wishlist/ids", [user.id])).rows.some((r) => r.product_id === p.id);
 
   return (
     <div className="space-y-8 pb-20 lg:pb-0">
@@ -50,6 +52,7 @@ export default async function ProductDetailPage({ params }) {
             <StockLabel stock={p.stock} />
           </div>
           <p className="font-display text-4xl font-bold text-slate-900">{formatRupiah(p.price)}</p>
+          {canBuy ? <WishlistButton productId={p.id} initialSaved={saved} showLabel className="!bg-white" /> : null}
           <div>
             <h2 className="mb-1 font-semibold text-slate-900">Deskripsi</h2>
             <p className="whitespace-pre-line text-slate-700">{p.description}</p>

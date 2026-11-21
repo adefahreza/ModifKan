@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseCartBody, groupCartByStore, planCheckout, addStockError } from '../src/lib/cart-rules.js';
+import { parseProductIdBody, parseCartBody, groupCartByStore, planCheckout, addStockError } from '../src/lib/cart-rules.js';
 
 test('parseCartBody', () => {
   assert.deepEqual(parseCartBody({ productId: 3, qty: 2 }), { productId: 3, qty: 2 });
@@ -58,4 +58,10 @@ test('addStockError: sisa dihitung dari stok dikurangi isi cart', () => {
   assert.equal(addStockError(5, 4, 2), 'Stok tidak mencukupi (sisa 1 lagi yang bisa ditambahkan)');
   assert.equal(addStockError(5, 5, 1), 'Stok tidak mencukupi (sudah ada 5 di keranjang)');
   assert.equal(addStockError(0, 0, 1), 'Stok tidak mencukupi (stok habis)');
+});
+
+test('parseProductIdBody', () => {
+  assert.deepEqual(parseProductIdBody({ productId: 3 }), { productId: 3 });
+  for (const bad of [null, {}, { productId: 'x' }, { productId: 0 }, { productId: 1.5 }, 'x'])
+    assert.deepEqual(parseProductIdBody(bad), { error: 'Data tidak valid' });
 });

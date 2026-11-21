@@ -21,6 +21,7 @@ export default async function ProductsPage({ searchParams }) {
     query("products/list-public", [q, categoryId, minPrice, maxPrice, sort, minRating]),
   ]);
 
+  const wishlistIds = user?.role === "buyer" ? (await query("wishlist/ids", [user.id])).rows.map((r) => r.product_id) : [];
   const options = [{ value: "", label: "Semua" }, ...categories.map((c) => ({ value: String(c.id), label: c.name }))];
   const hasFilter = q !== null || categoryId !== null || minPrice !== null || maxPrice !== null || minRating !== null;
 
@@ -42,6 +43,7 @@ export default async function ProductsPage({ searchParams }) {
       <ProductGrid
         products={products}
         showCart={!user || user.role === "buyer"}
+        wishlistIds={wishlistIds}
         empty={
           <>
             <p className="font-semibold text-slate-900">Produk tidak ditemukan</p>
