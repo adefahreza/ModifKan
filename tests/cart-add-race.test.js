@@ -4,7 +4,7 @@ import { query, closePool } from '../src/lib/db.js';
 
 test('dua penambahan cart bersamaan tidak melebihi stok', { skip: !process.env.DATABASE_URL }, async () => {
   const buyerId = (await query('auth/find-user-by-email', ['dewi@modifkan.test'])).rows[0].id;
-  const product = (await query('products/list-public', ['Spoiler Bagasi Ducktail', null])).rows[0];
+  const product = (await query('products/list-public', ['Spoiler Bagasi Ducktail', null, null, null, 'terbaru', null])).rows[0];
   try {
     for (let round = 0; round < 5; round++) {
       await query('cart/clear', [buyerId]);

@@ -27,7 +27,7 @@ function checkout(buyerId) {
 
 test('dua checkout bersamaan dari buyer yang sama hanya membuat satu set order', { skip: !process.env.DATABASE_URL }, async () => {
   const buyerId = (await query('auth/find-user-by-email', ['rizky@modifkan.test'])).rows[0].id;
-  const product = (await query('products/list-public', ['Oli Mesin Full Synthetic', null])).rows[0];
+  const product = (await query('products/list-public', ['Oli Mesin Full Synthetic', null, null, null, 'terbaru', null])).rows[0];
   const { rows: [{ max_id: maxOrderId }] } = await query('testing/max-order-id');
   try {
     for (let round = 0; round < 5; round++) {

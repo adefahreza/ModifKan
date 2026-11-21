@@ -7,7 +7,7 @@ import { query, withTransaction, closePool } from '../src/lib/db.js';
 test('restore-stock mengunci produk berurutan id', { skip: !process.env.DATABASE_URL }, async () => {
   // Bagas, bukan Rizky: checkout-race.test.js berjalan paralel dan menghapus order baru milik Rizky.
   const buyerId = (await query('auth/find-user-by-email', ['bagas@modifkan.test'])).rows[0].id;
-  const products = (await query('products/list-public', [null, null])).rows;
+  const products = (await query('products/list-public', [null, null, null, null, 'terbaru', null])).rows;
   const [a, b] = [...products].sort((x, y) => x.id - y.id).slice(0, 2);
   const { rows: [{ max_id: maxOrderId }] } = await query('testing/max-order-id');
 
