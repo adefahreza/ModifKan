@@ -1,13 +1,17 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { createCategoryAction, updateCategoryAction } from "@/lib/actions/categories";
 import Field from "@/components/ui/Field";
 import Button from "@/components/ui/Button";
 import SubmitButton from "@/components/SubmitButton";
+import { showToast } from "@/lib/toast-client";
 
 export function CreateCategoryForm() {
   const [state, formAction] = useActionState(createCategoryAction, { errors: {}, values: { name: "" } });
+  useEffect(() => {
+    if (state.saved) showToast("kategori-ditambah");
+  }, [state.saved]);
   return (
     <form key={state.saved ?? "new"} action={formAction} className="flex items-start gap-2" noValidate>
       <Field label="Nama kategori" name="name" defaultValue={state.values.name} error={state.errors.name} className="w-full max-w-xs" />
@@ -21,6 +25,9 @@ export function EditCategory({ category }) {
   const [state, formAction] = useActionState(updateCategoryAction.bind(null, category.id), {
     errors: {}, values: { name: category.name },
   });
+  useEffect(() => {
+    if (state.saved) showToast("kategori-disimpan");
+  }, [state.saved]);
   const editing = openAt !== null && openAt.saved === state.saved;
 
   if (!editing) return <Button size="sm" variant="secondary" onClick={() => setOpenAt({ saved: state.saved })}>Edit</Button>;

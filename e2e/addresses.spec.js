@@ -110,11 +110,17 @@ test('checkout: tanpa alamat, alamat dirusak, lalu pesanan berhasil membawa alam
 
     // address_id diubah ke id yang tidak ada: ditolak, tidak ada order.
     const formAlert = page.locator('form p[role="alert"]');
-    await page.getByRole('radio').first().evaluate((el) => { el.value = '99999999'; });
+    // FlashToast menghapus ?toast= lewat router.replace; render ulang itu mengembalikan nilai radio yang
+    // diubah. Tunggu sampai selesai, lalu pasang nilai rusak lagi tepat sebelum tiap klik.
+    await expect(page).toHaveURL(/\/checkout$/);
+    await page.waitForLoadState('networkidle');
+    // Action pertama bisa lambat di server dev saat banyak worker berjalan (tombol berlabel "Memproses…"),
+    // jadi tiap percobaan diberi waktu lebih longgar.
     await expect(async () => {
-      await page.getByRole('button', { name: 'Buat Pesanan' }).click({ timeout: 2000 });
-      await expect(formAlert).toHaveText('Alamat tidak ditemukan', { timeout: 2000 });
-    }).toPass({ timeout: 10000 });
+      await page.getByRole('radio').first().evaluate((el) => { el.value = '99999999'; });
+      await page.getByRole('button', { name: 'Buat Pesanan' }).click({ timeout: 5000 });
+      await expect(formAlert).toHaveText('Alamat tidak ditemukan', { timeout: 8000 });
+    }).toPass({ timeout: 30000 });
 
     // Tanpa address_id sama sekali.
     await page.getByRole('radio').first().evaluate((el) => el.remove());

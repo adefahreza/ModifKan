@@ -15,10 +15,26 @@
   );
 }
 
+/* Toast: masuk dari kanan, lalu bar waktu menyusut 3 detik (samakan dengan DURATION di FlashToast.jsx) */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(1rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes toast-progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+.toast-in { animation: toast-in 200ms ease-out; }
+.toast-progress { transform-origin: left; animation: toast-progress 3000ms linear forwards; }
+.toast-progress[data-paused="true"] { animation-play-state: paused; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     transition: none !important;
     animation: none !important;
     scroll-behavior: auto !important;
   }
+  /* Bar waktu memberi informasi sisa waktu, bukan dekorasi, jadi tetap berjalan. */
+  .toast-progress { animation: toast-progress 3000ms linear forwards !important; }
+  .toast-progress[data-paused="true"] { animation-play-state: paused !important; }
 }

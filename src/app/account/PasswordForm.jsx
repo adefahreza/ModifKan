@@ -1,14 +1,18 @@
 "use client";
 
-import { startTransition, useActionState } from "react";
-import { CheckCircle2 } from "lucide-react";
+import { startTransition, useActionState, useEffect } from "react";
 import { changePasswordAction } from "@/lib/actions/profile";
 import Field from "@/components/ui/Field";
 import Button from "@/components/ui/Button";
+import { showToast } from "@/lib/toast-client";
 
 // Isian tetap ada saat validasi gagal; setelah berhasil, form dipasang ulang (key) agar password tidak tertinggal.
 export default function PasswordForm() {
   const [state, formAction, pending] = useActionState(changePasswordAction, { errors: {}, values: {} });
+  useEffect(() => {
+    if (state.savedAt) showToast("password-diubah");
+  }, [state.savedAt]);
+
   function onSubmit(e) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -21,11 +25,6 @@ export default function PasswordForm() {
       <Field label="Password baru" name="newPassword" type="password" error={state.errors.newPassword} autoComplete="new-password" hint="Minimal 8 karakter" />
       <Field label="Konfirmasi password baru" name="confirmPassword" type="password" error={state.errors.confirmPassword} autoComplete="new-password" />
       <Button type="submit" disabled={pending}>{pending ? "Menyimpan…" : "Ganti password"}</Button>
-      {state.message && !pending ? (
-        <p role="status" className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
-          <CheckCircle2 size={16} aria-hidden="true" /> {state.message}
-        </p>
-      ) : null}
     </form>
   );
 }

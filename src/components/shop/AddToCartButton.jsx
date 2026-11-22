@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { CART_COUNT_EVENT } from "./CartBadge";
+import { showToast } from "@/lib/toast-client";
 
 export default function AddToCartButton({
   productId, qty = 1, disabled = false, label = "Tambah ke Keranjang", size = "md", className = "",
@@ -37,7 +38,7 @@ export default function AddToCartButton({
       }
       const data = await res.json().catch(() => ({}));
       if (!res.ok) return show(data.error ?? "Gagal menambah ke keranjang", false);
-      show("Ditambahkan ke keranjang", true);
+      showToast("keranjang-ditambah");
       window.dispatchEvent(new CustomEvent(CART_COUNT_EVENT, { detail: data.count }));
     } catch {
       show("Gagal menghubungi server", false);

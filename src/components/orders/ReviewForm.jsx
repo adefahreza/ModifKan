@@ -1,9 +1,10 @@
 "use client";
 
-import { startTransition, useActionState, useId, useState } from "react";
-import { CheckCircle2, Star } from "lucide-react";
+import { startTransition, useActionState, useEffect, useId, useState } from "react";
+import { Star } from "lucide-react";
 import { createReviewAction } from "@/lib/actions/reviews";
 import Button from "@/components/ui/Button";
+import { showToast } from "@/lib/toast-client";
 
 export default function ReviewForm({ orderItemId }) {
   const [action] = useState(() => createReviewAction.bind(null, orderItemId));
@@ -11,13 +12,12 @@ export default function ReviewForm({ orderItemId }) {
   const [rating, setRating] = useState(0);
   const id = useId();
 
-  if (state.done) {
-    return (
-      <p role="status" className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
-        <CheckCircle2 size={16} aria-hidden="true" /> {state.message}
-      </p>
-    );
-  }
+  useEffect(() => {
+    if (state.done) showToast("ulasan-terkirim");
+  }, [state.done]);
+
+  // Setelah terkirim, halaman di-revalidate dan ulasan tampil menggantikan form; konfirmasinya lewat toast.
+  if (state.done) return null;
 
   function onSubmit(e) {
     e.preventDefault();

@@ -4,6 +4,7 @@ test.use({ viewport: { width: 1280, height: 800 } });
 
 async function login(page, email, password = 'modifkan123') {
   await page.goto('/login');
+  await page.waitForLoadState('networkidle'); // tunggu hidrasi supaya submit tidak jalan sebelum handler siap
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Masuk' }).click();

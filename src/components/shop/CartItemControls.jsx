@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Minus, Plus, Trash2 } from "lucide-react";
+import { showToast } from "@/lib/toast-client";
 
 export default function CartItemControls({ productId, qty, stock, name, removeOnly = false }) {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function CartItemControls({ productId, qty, stock, name, removeOn
       if (res.status === 401) return router.push("/login?next=/cart");
       const data = await res.json().catch(() => ({}));
       if (!res.ok) return setError(data.error ?? "Gagal memperbarui keranjang");
+      showToast(method === "DELETE" ? "keranjang-dihapus" : "keranjang-diperbarui");
       router.refresh();
     } catch {
       setError("Gagal menghubungi server");
