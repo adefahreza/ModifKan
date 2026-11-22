@@ -14,7 +14,7 @@ export default async function AdminOrdersPage({ searchParams }) {
   await requireRole("admin");
   const sp = await searchParams;
   const status = isOrderStatus(sp.status) ? sp.status : null;
-  const { rows: orders } = await query("admin/list-orders", [status]);
+  const { rows: orders } = await query("admin/list-orders", [status, null]);
   const options = [{ value: "", label: "Semua" }, ...ORDER_STATUSES.map((s) => ({ value: s, label: STATUS_LABELS[s] }))];
 
   return (
