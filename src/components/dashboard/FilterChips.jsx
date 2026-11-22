@@ -9,7 +9,7 @@ export default function FilterChips({ options, param = "status", current, basePa
     return `${basePath}${qs ? `?${qs}` : ""}` || "?";
   };
   return (
-    <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0" role="tablist">
+    <div className="-mx-4 flex gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:px-0" role="tablist">
       {options.map((o) => {
         const active = o.value === current;
         return (

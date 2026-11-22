@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import Link from "next/link";
-import { SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 
 const SORT_OPTIONS = [
   { value: "terbaru", label: "Terbaru" },
@@ -92,11 +92,16 @@ export function SortSelect({ filters }) {
       {filters.maxPrice !== null ? <input type="hidden" name="max" value={filters.maxPrice} /> : null}
       {filters.minRating !== null ? <input type="hidden" name="rating" value={filters.minRating} /> : null}
       <label htmlFor={id} className="text-sm text-slate-600">Urutkan</label>
-      <select id={id} name="sort" defaultValue={filters.sort}
-        onChange={(e) => e.currentTarget.form.requestSubmit()}
-        className={`${inputCls} w-auto`}>
-        {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-      </select>
+      {/* Panah bawaan browser disembunyikan (appearance-none) dan diganti ikon supaya jaraknya bisa diatur. */}
+      <div className="relative">
+        <select id={id} name="sort" defaultValue={filters.sort}
+          onChange={(e) => e.currentTarget.form.requestSubmit()}
+          className={`${inputCls} w-auto appearance-none pr-10`}>
+          {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+        <ChevronDown data-select-arrow size={16} aria-hidden="true"
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" />
+      </div>
       <noscript><button type="submit" className="text-sm font-semibold text-red-600">Terapkan</button></noscript>
     </form>
   );
