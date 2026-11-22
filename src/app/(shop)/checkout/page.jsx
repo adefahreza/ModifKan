@@ -12,7 +12,7 @@ export const metadata = { title: "Checkout — ModifKan" };
 
 export default async function CheckoutPage() {
   const user = await requireRole("buyer");
-  const { rows } = await query("cart/list", [user.id]);
+  const [{ rows }, { rows: addresses }] = await Promise.all([query("cart/list", [user.id]), query("addresses/list", [user.id])]);
   if (rows.length === 0) redirect("/cart");
   const cart = groupCartByStore(rows);
   if (cart.groups.some((g) => g.items.some((i) => i.unavailable))) redirect("/cart");
@@ -47,7 +47,7 @@ export default async function CheckoutPage() {
             <span className="font-display text-2xl font-bold">{formatRupiah(cart.total)}</span>
           </div>
           <p className="text-xs text-slate-500">Satu pesanan dibuat untuk setiap toko.</p>
-          <CheckoutForm />
+          <CheckoutForm addresses={addresses} />
         </aside>
       </div>
     </div>

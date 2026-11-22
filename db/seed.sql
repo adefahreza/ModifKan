@@ -109,6 +109,21 @@ SELECT pg_temp.seed_order('bagas@modifkan.test', 'Speedshop ID', 'dibatalkan',  
 SELECT pg_temp.seed_order('rizky@modifkan.test', 'Kaki Kuat',    'menunggu_pembayaran', interval '3 hours',
   ARRAY['Piringan Rem Drilled-Slotted + Wheel Spacer'], ARRAY[1]);
 
+-- Alamat: satu alamat untuk Rizky, dan salinannya (snapshot) di order buyer yang sudah punya data pengiriman
+INSERT INTO addresses (buyer_id, recipient, phone, address, city, postal_code)
+SELECT id, 'Rizky Aditya', '081200000002', 'Jl. Dago No. 25, RT 03 RW 05, Coblong', 'Bandung', '40135'
+FROM users WHERE email = 'rizky@modifkan.test';
+
+UPDATE orders o
+SET shipping_recipient = 'Rizky Aditya', shipping_phone = '081200000002',
+    shipping_address = 'Jl. Dago No. 25, RT 03 RW 05, Coblong', shipping_city = 'Bandung', shipping_postal_code = '40135'
+FROM users u WHERE u.id = o.buyer_id AND u.email = 'rizky@modifkan.test';
+
+UPDATE orders o
+SET shipping_recipient = 'Dewi Lestari', shipping_phone = '081200000008',
+    shipping_address = 'Jl. Melati Raya No. 8, Kebayoran Baru', shipping_city = 'Jakarta Selatan', shipping_postal_code = '12120'
+FROM users u WHERE u.id = o.buyer_id AND u.email = 'dewi@modifkan.test' AND o.status = 'selesai';
+
 -- Ulasan: hanya untuk item pada order berstatus selesai
 INSERT INTO reviews (order_item_id, product_id, buyer_id, rating, comment, created_at)
 SELECT oi.id, oi.product_id, o.buyer_id, v.rating, v.comment, o.created_at + interval '3 days'

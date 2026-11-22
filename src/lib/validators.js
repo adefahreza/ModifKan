@@ -184,3 +184,21 @@ export function validatePasswordChange(input) {
   if (values.confirmPassword !== values.newPassword) errors.confirmPassword = 'Konfirmasi password tidak sama';
   return { values, errors };
 }
+
+export function validateAddress(input) {
+  const values = {
+    recipient: str(input.recipient).trim(),
+    phone: str(input.phone).replace(/[\s-]/g, ''),
+    address: str(input.address).trim(),
+    city: str(input.city).trim(),
+    postalCode: str(input.postalCode).trim(),
+  };
+  const errors = {};
+  const set = (field, msg) => { if (msg) errors[field] = msg; };
+  set('recipient', first(required(values.recipient, 'Nama penerima'), maxLength(values.recipient, 100, 'Nama penerima')));
+  set('phone', first(required(values.phone, 'Nomor HP'), isPhone(values.phone)));
+  set('address', first(required(values.address, 'Alamat'), minLength(values.address, 10, 'Alamat'), maxLength(values.address, 500, 'Alamat')));
+  set('city', first(required(values.city, 'Kota'), maxLength(values.city, 100, 'Kota')));
+  if (!/^\d{5}$/.test(values.postalCode)) errors.postalCode = 'Kode pos harus 5 digit';
+  return { values, errors };
+}

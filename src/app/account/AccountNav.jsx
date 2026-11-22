@@ -7,6 +7,7 @@ const ITEMS = [
   { href: "/account", label: "Profil" },
   { href: "/account/orders", label: "Pesanan" },
   { href: "/account/wishlist", label: "Wishlist" },
+  { href: "/account/addresses", label: "Alamat" },
 ];
 
 export default function AccountNav() {

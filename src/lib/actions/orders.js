@@ -9,9 +9,15 @@ import { resolveTransition } from '../order-rules.js';
 
 class CheckoutError extends Error {}
 
-// formData diterima agar Hari 5 bisa membaca address_id tanpa mengubah tanda tangan action.
 export async function checkoutAction(prevState, formData) {
   const user = await requireRole('buyer');
+
+  // Alamat dicek sebelum transaksi: harus milik buyer ini (dicek di SQL), lalu disalin ke tiap order.
+  const rawAddressId = formData.get('address_id');
+  const addressId = typeof rawAddressId === 'string' && /^\d{1,9}$/.test(rawAddressId) ? Number(rawAddressId) : null;
+  if (addressId === null) return { message: 'Pilih alamat pengiriman' };
+  const { rows: [address] } = await query('addresses/find', [addressId, user.id]);
+  if (!address) return { message: 'Alamat tidak ditemukan' };
 
   let created;
   try {
@@ -26,7 +32,7 @@ export async function checkoutAction(prevState, formData) {
           const dec = await tx.query('orders/decrease-stock', [item.productId, item.qty]);
           if (dec.rowCount === 0) throw new CheckoutError(`Stok ${item.name} tidak mencukupi`);
         }
-        const { rows: [{ id }] } = await tx.query('orders/create', [user.id, order.storeId, order.total, null, null, null, null, null]);
+        const { rows: [{ id }] } = await tx.query('orders/create', [user.id, order.storeId, order.total, address.recipient, address.phone, address.address, address.city, address.postal_code]);
         for (const item of order.items) {
           await tx.query('orders/create-item', [id, item.productId, item.name, item.price, item.qty]);
         }
@@ -40,7 +46,7 @@ export async function checkoutAction(prevState, formData) {
   }
 
   revalidatePath('/', 'layout');
-  redirect(`/account/orders?created=${created}`);
+  redirect('/account/orders?toast=pesanan-dibuat');
 }
 
 // Penjaga sebenarnya ada di SQL: WHERE id, pemilik, dan status asal. Tanpa baris = status sudah berubah.

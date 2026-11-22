@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validateRegister, validateLogin, isPhone, intInRange, isImageFile, normalizeEmail, hasErrors,
-  validateCategory, validateStore, validateProduct, validateUserEdit, validateReview, validatePasswordChange } from '../src/lib/validators.js';
+  validateCategory, validateStore, validateProduct, validateUserEdit, validateReview, validatePasswordChange, validateAddress } from '../src/lib/validators.js';
 
 test('register buyer valid', () => {
   const { values, errors } = validateRegister({ role: 'buyer', name: ' Budi ', email: ' Budi@Mail.com ',
@@ -127,4 +127,22 @@ test('batas password dihitung dalam byte (batas bcrypt 72 byte)', () => {
   assert.equal(validatePasswordChange({ oldPassword: 'a', newPassword: ascii, confirmPassword: ascii }).errors.newPassword, undefined);
   assert.equal(validateRegister({ role: 'buyer', name: 'Budi', email: 'b@mail.com', phone: '081234567890',
     password: emoji, confirmPassword: emoji }).errors.password, 'Password terlalu panjang');
+});
+
+test('alamat', () => {
+  const ok = validateAddress({ recipient: ' Rizky ', phone: '0812-3456-7890', address: 'Jl. Merdeka No. 10, RT 02',
+    city: 'Bandung', postalCode: '40115' });
+  assert.deepEqual(ok.errors, {}); assert.equal(ok.values.recipient, 'Rizky'); assert.equal(ok.values.phone, '081234567890');
+  const bad = validateAddress({ recipient: '', phone: '12', address: 'pendek', city: '', postalCode: '4011' });
+  assert.equal(bad.errors.recipient, 'Nama penerima wajib diisi');
+  assert.equal(bad.errors.phone, 'Nomor HP tidak valid (contoh: 081234567890)');
+  assert.equal(bad.errors.address, 'Alamat minimal 10 karakter');
+  assert.equal(bad.errors.city, 'Kota wajib diisi');
+  assert.equal(bad.errors.postalCode, 'Kode pos harus 5 digit');
+});
+
+test('alamat: batas panjang dan kode pos non-angka', () => {
+  const long = validateAddress({ recipient: 'a'.repeat(101), phone: '081234567890', address: 'x'.repeat(501), city: 'c'.repeat(101), postalCode: '12a45' });
+  assert.ok(long.errors.recipient && long.errors.address && long.errors.city);
+  assert.equal(long.errors.postalCode, 'Kode pos harus 5 digit');
 });
