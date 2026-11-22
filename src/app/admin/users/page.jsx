@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Users } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { Pencil, Search } from "lucide-react";
 import { query } from "@/lib/db";
 import Badge from "@/components/ui/Badge";
@@ -16,7 +18,7 @@ function Actions({ u }) {
     <div className="flex gap-2">
       <Button as={Link} href={`/admin/users/${u.id}/edit`} variant="secondary" size="sm"><Pencil size={14} aria-hidden="true" /> Edit</Button>
       <ConfirmActionButton action={deleteUserAction.bind(null, u.id)} title="Hapus pengguna?"
-        message="Akun ini beserta toko, produk, dan ulasannya akan dihapus permanen." confirmLabel="Ya, hapus">Hapus</ConfirmActionButton>
+        message="Akun ini beserta toko, produk, dan ulasannya akan dihapus permanen." confirmLabel="Ya, hapus" successToast="pengguna-dihapus">Hapus</ConfirmActionButton>
     </div>
   );
 }
@@ -36,9 +38,7 @@ export default async function UsersPage({ searchParams }) {
       </form>
 
       {rows.length === 0 ? (
-        <p className="mt-6 rounded-xl bg-white p-8 text-center text-slate-600 ring-1 ring-slate-200">
-          {q ? `Tidak ada pengguna yang cocok dengan “${q}”.` : "Belum ada pengguna."}
-        </p>
+        <EmptyState icon={Users} title={q ? `Tidak ada pengguna yang cocok dengan “${q}”` : "Belum ada pengguna"} className="mt-6" />
       ) : (
         <>
           <div className="mt-4 hidden overflow-x-auto rounded-xl bg-white ring-1 ring-slate-200 md:block">

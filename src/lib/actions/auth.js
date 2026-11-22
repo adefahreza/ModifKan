@@ -68,5 +68,5 @@ export async function deleteRejectedAccountAction() {
   const { rowCount } = await query('auth/delete-rejected-seller', [user.id]);
   if (rowCount === 0) return { message: 'Akun tidak dapat dihapus' };
   await destroySession();
-  redirect('/?deleted=1');
+  redirect('/?toast=akun-dihapus');
 }

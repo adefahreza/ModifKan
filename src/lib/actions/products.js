@@ -42,7 +42,7 @@ export async function createProductAction(prevState, formData) {
     throw err;
   }
   revalidatePath('/seller', 'layout');
-  redirect('/seller/products');
+  redirect('/seller/products?toast=produk-disimpan');
 }
 
 export async function updateProductAction(productId, prevState, formData) {
@@ -70,7 +70,7 @@ export async function updateProductAction(productId, prevState, formData) {
   }
   if (newName) await deleteImage(before[0].image);
   revalidatePath('/seller', 'layout');
-  redirect('/seller/products');
+  redirect('/seller/products?toast=produk-disimpan');
 }
 
 export async function deleteProductAction(productId) {

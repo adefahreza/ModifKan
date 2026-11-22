@@ -46,5 +46,5 @@ export async function updateStoreAction(prevState, formData) {
   }
   if (newName && current[0]?.image) await deleteImage(current[0].image);
   revalidatePath('/seller', 'layout');
-  redirect('/seller/store?saved=1');
+  redirect('/seller/store?toast=toko-disimpan');
 }

@@ -3,8 +3,9 @@
 import { useState, useTransition } from "react";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
+import { showToast } from "@/lib/toast-client";
 
-export default function ConfirmActionButton({ action, title, message, confirmLabel = "Ya", variant = "danger", size = "sm", disabled = false, children }) {
+export default function ConfirmActionButton({ action, title, message, confirmLabel = "Ya", successToast, variant = "danger", size = "sm", disabled = false, children }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
@@ -13,7 +14,10 @@ export default function ConfirmActionButton({ action, title, message, confirmLab
     startTransition(async () => {
       const result = await action();
       if (result?.message) setError(result.message);
-      else setOpen(false);
+      else {
+        setOpen(false);
+        if (successToast) showToast(successToast);
+      }
     });
   }
 

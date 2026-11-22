@@ -1,4 +1,6 @@
 import { AlertTriangle, ClipboardList, Package } from "lucide-react";
+import { PackageOpen } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { query } from "@/lib/db";
 import { requireApprovedSeller } from "@/lib/auth";
 import { ORDER_STATUSES, STATUS_LABELS } from "@/lib/order-rules";
@@ -36,7 +38,7 @@ export default async function SellerHome() {
       <h2 className="mt-8 font-display text-2xl font-bold uppercase">Pesanan terbaru</h2>
       <div className="mt-3">
         {latest.length === 0 ? (
-          <p className="rounded-xl bg-white p-8 text-center text-slate-600 ring-1 ring-slate-200">Belum ada pesanan</p>
+          <EmptyState icon={PackageOpen} title="Belum ada pesanan" description="Pesanan dari pembeli akan muncul di sini." />
         ) : (
           <OrdersTable orders={latest} hrefBase="/seller/orders" columns={{ buyer: true }} />
         )}

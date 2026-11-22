@@ -1,9 +1,11 @@
 import Link from "next/link";
+import EmptyState from "@/components/ui/EmptyState";
 import { AlertTriangle, ShoppingCart, Store } from "lucide-react";
 import { query } from "@/lib/db";
 import { requireRole } from "@/lib/auth";
 import { groupCartByStore } from "@/lib/cart-rules";
 import { formatRupiah, imageUrl } from "@/lib/format";
+import ProductImage from "@/components/shop/ProductImage";
 import Button from "@/components/ui/Button";
 import CartItemControls from "@/components/shop/CartItemControls";
 
@@ -18,11 +20,7 @@ export default async function CartPage() {
 
   if (cart.groups.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-xl bg-white px-6 py-16 text-center ring-1 ring-slate-200">
-        <ShoppingCart size={40} className="text-slate-400" aria-hidden="true" />
-        <p className="font-semibold text-slate-900">Keranjang masih kosong</p>
-        <Button as={Link} href="/products">Mulai belanja</Button>
-      </div>
+      <EmptyState icon={ShoppingCart} title="Keranjang masih kosong" action={<Button as={Link} href="/products">Mulai belanja</Button>} />
     );
   }
 
@@ -39,7 +37,7 @@ export default async function CartPage() {
               <ul className="divide-y divide-slate-200">
                 {g.items.map((it) => (
                   <li key={it.product_id} className="flex gap-3 p-4">
-                    <img src={imageUrl(it.image)} alt="" className="size-20 shrink-0 rounded-lg object-cover" />
+                    <ProductImage src={imageUrl(it.image)} categoryName={it.category_name} iconSize={28} className="size-20 shrink-0 rounded-lg object-cover" />
                     <div className="min-w-0 flex-1 space-y-2">
                       <Link href={`/products/${it.product_id}`} className="line-clamp-2 font-semibold text-slate-900 hover:text-red-600">{it.name}</Link>
                       <p className="font-display text-lg font-bold">{formatRupiah(it.price)}</p>

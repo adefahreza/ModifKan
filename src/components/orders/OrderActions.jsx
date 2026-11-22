@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Button from "@/components/ui/Button";
 import ConfirmActionButton from "@/components/ConfirmActionButton";
+import { showToast } from "@/lib/toast-client";
 
 // actions: [{ name, label, run }] — run adalah server action yang sudah di-bind (mengembalikan { message? }).
 export default function OrderActions({ actions }) {
@@ -20,6 +21,7 @@ export default function OrderActions({ actions }) {
     try {
       const result = await run();
       if (result?.message) setError(result.message);
+      else showToast("status-diperbarui");
       return result;
     } finally {
       setCancelling(false);
@@ -31,6 +33,7 @@ export default function OrderActions({ actions }) {
     startTransition(async () => {
       const result = await run();
       if (result?.message) setError(result.message);
+      else showToast("status-diperbarui");
     });
   }
 

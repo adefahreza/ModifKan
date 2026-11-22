@@ -30,7 +30,7 @@ export async function updateUserAction(userId, prevState, formData) {
   }
   if (rowCount === 0) return { errors: {}, values, message: 'Pengguna tidak ditemukan' };
   revalidatePath('/admin/users');
-  redirect('/admin/users');
+  redirect('/admin/users?toast=pengguna-disimpan');
 }
 
 export async function deleteUserAction(userId) {

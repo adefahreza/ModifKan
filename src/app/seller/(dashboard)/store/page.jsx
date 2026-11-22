@@ -1,9 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BadgeCheck, Mail, Pencil, Phone, Store, User } from "lucide-react";
 import { query } from "@/lib/db";
 import { requireApprovedSeller } from "@/lib/auth";
+import ProductImage from "@/components/shop/ProductImage";
 import { formatDate, imageUrl } from "@/lib/format";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
@@ -40,11 +40,10 @@ export default async function StorePage({ searchParams }) {
         <h1 className="font-display text-3xl font-bold uppercase">Toko Saya</h1>
         <Button as={Link} href="/seller/store/edit"><Pencil size={16} aria-hidden="true" /> Edit Toko</Button>
       </div>
-      {sp.saved === "1" ? <p role="status" className="mt-4 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800">Perubahan toko tersimpan.</p> : null}
 
       <section className="mt-5 flex flex-col gap-5 rounded-xl bg-white p-5 ring-1 ring-slate-200 sm:flex-row">
         <div className="flex size-28 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-100 ring-1 ring-slate-200 sm:size-36">
-          {photo ? <img src={photo} alt={`Gambar toko ${store.name}`} className="size-full object-cover" /> : <Store size={40} className="text-slate-400" aria-hidden="true" />}
+          {photo ? <ProductImage src={photo} alt={`Gambar toko ${store.name}`} fallback={<Store size={40} aria-hidden="true" />} className="size-full object-cover" /> : <Store size={40} className="text-slate-400" aria-hidden="true" />}
         </div>
         <div className="min-w-0">
           <h2 className="font-display text-3xl font-bold uppercase">{store.name}</h2>

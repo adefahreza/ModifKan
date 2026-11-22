@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Heart } from "lucide-react";
+import { showToast } from "@/lib/toast-client";
 
 export default function WishlistButton({ productId, initialSaved = false, showLabel = false, className = "" }) {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function WishlistButton({ productId, initialSaved = false, showLa
         setSaved(!next);
         return;
       }
+      showToast(next ? "wishlist-disimpan" : "wishlist-dihapus");
       if (pathname.startsWith("/account/wishlist")) router.refresh();
     } catch {
       setSaved(!next);

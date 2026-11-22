@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { Pencil, Plus } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
+import { Package, Pencil, Plus } from "lucide-react";
 import { query } from "@/lib/db";
 import { requireApprovedSeller } from "@/lib/auth";
 import { formatRupiah, imageUrl } from "@/lib/format";
@@ -8,6 +8,7 @@ import { deleteProductAction } from "@/lib/actions/products";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import ConfirmActionButton from "@/components/ConfirmActionButton";
+import ProductImage from "@/components/shop/ProductImage";
 
 export const metadata = { title: "Produk — ModifKan" };
 
@@ -20,7 +21,7 @@ function Actions({ p }) {
     <div className="flex gap-2">
       <Button as={Link} href={`/seller/products/${p.id}/edit`} variant="secondary" size="sm"><Pencil size={14} aria-hidden="true" /> Edit</Button>
       <ConfirmActionButton action={deleteProductAction.bind(null, p.id)} title="Hapus produk?"
-        message={`Produk “${p.name}” akan dihapus permanen.`} confirmLabel="Ya, hapus">Hapus</ConfirmActionButton>
+        message={`Produk “${p.name}” akan dihapus permanen.`} confirmLabel="Ya, hapus" successToast="produk-dihapus">Hapus</ConfirmActionButton>
     </div>
   );
 }
@@ -36,10 +37,7 @@ export default async function SellerProductsPage() {
       </div>
 
       {rows.length === 0 ? (
-        <div className="mt-6 rounded-xl bg-white p-8 text-center ring-1 ring-slate-200">
-          <p className="text-slate-600">Toko belum punya produk.</p>
-          <Button as={Link} href="/seller/products/new" className="mt-4">Tambah produk pertama</Button>
-        </div>
+        <EmptyState icon={Package} title="Toko belum punya produk" className="mt-6" action={<Button as={Link} href="/seller/products/new">Tambah produk pertama</Button>} />
       ) : (
         <>
           <div className="mt-4 hidden overflow-x-auto rounded-xl bg-white ring-1 ring-slate-200 md:block">
@@ -50,7 +48,7 @@ export default async function SellerProductsPage() {
               <tbody className="divide-y divide-slate-200">
                 {rows.map((p) => (
                   <tr key={p.id}>
-                    <td className="px-4 py-3"><img src={imageUrl(p.image)} alt="" className="size-12 rounded-lg object-cover" /></td>
+                    <td className="px-4 py-3"><ProductImage src={imageUrl(p.image)} categoryName={p.category_name} iconSize={20} className="size-12 rounded-lg object-cover" /></td>
                     <td className="px-4 py-3 font-semibold">{p.name}</td>
                     <td className="px-4 py-3">{p.category_name}</td>
                     <td className="px-4 py-3">{formatRupiah(p.price)}</td>
@@ -65,7 +63,7 @@ export default async function SellerProductsPage() {
             {rows.map((p) => (
               <li key={p.id} className="rounded-xl bg-white p-4 ring-1 ring-slate-200">
                 <div className="flex gap-3">
-                  <img src={imageUrl(p.image)} alt="" className="size-16 rounded-lg object-cover" />
+                  <ProductImage src={imageUrl(p.image)} categoryName={p.category_name} iconSize={24} className="size-16 rounded-lg object-cover" />
                   <div className="min-w-0">
                     <p className="font-semibold">{p.name}</p>
                     <p className="text-sm text-slate-600">{p.category_name} · {formatRupiah(p.price)}</p>

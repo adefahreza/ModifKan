@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import Logo from "@/components/Logo";
+import FlashToast from "@/components/ui/FlashToast";
 
 const ICONS = { LayoutDashboard, Store, Package, ClipboardList, BadgeCheck, Users, Tags };
 
@@ -85,6 +86,7 @@ export default function DashboardShell({ title, items, user, children }) {
       ) : null}
 
       <main className="min-w-0 flex-1 bg-slate-50 p-4 sm:p-6">{children}</main>
+      <Suspense fallback={null}><FlashToast /></Suspense>
     </div>
   );
 }

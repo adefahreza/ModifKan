@@ -1,4 +1,6 @@
 import { query } from "@/lib/db";
+import { BadgeCheck } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import { formatDate } from "@/lib/format";
 import Badge from "@/components/ui/Badge";
 import FilterChips from "@/components/dashboard/FilterChips";
@@ -26,7 +28,7 @@ export default async function SellersPage({ searchParams }) {
       <div className="mt-4"><FilterChips options={options} param="status" current={status} basePath="/admin/sellers" /></div>
 
       {rows.length === 0 ? (
-        <p className="mt-6 rounded-xl bg-white p-8 text-center text-slate-600 ring-1 ring-slate-200">Tidak ada seller berstatus {LABEL[status].toLowerCase()}.</p>
+        <EmptyState icon={BadgeCheck} title={`Tidak ada seller berstatus ${LABEL[status].toLowerCase()}`} className="mt-6" />
       ) : (
         <>
           <div className="mt-4 hidden overflow-x-auto rounded-xl bg-white ring-1 ring-slate-200 md:block">

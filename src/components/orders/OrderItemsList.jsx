@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Package } from "lucide-react";
+import ProductImage from "@/components/shop/ProductImage";
 import { formatRupiah, imageUrl } from "@/lib/format";
 
 export default function OrderItemsList({ items, renderItemExtra }) {
@@ -9,7 +10,7 @@ export default function OrderItemsList({ items, renderItemExtra }) {
         <li key={item.id} className="p-4">
           <div className="flex gap-3">
             {item.image ? (
-              <img src={imageUrl(item.image)} alt="" loading="lazy" className="size-16 shrink-0 rounded-lg bg-slate-100 object-cover" />
+              <ProductImage src={imageUrl(item.image)} loading="lazy" fallback={<Package size={24} aria-hidden="true" />} className="size-16 shrink-0 rounded-lg bg-slate-100 object-cover" />
             ) : (
               <div className="flex size-16 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400">
                 <Package size={24} aria-hidden="true" />

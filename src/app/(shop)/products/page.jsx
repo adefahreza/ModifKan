@@ -44,12 +44,7 @@ export default async function ProductsPage({ searchParams }) {
         products={products}
         showCart={!user || user.role === "buyer"}
         wishlistIds={wishlistIds}
-        empty={
-          <>
-            <p className="font-semibold text-slate-900">Produk tidak ditemukan</p>
-            {hasFilter ? <Link href="/products" className="text-sm font-semibold text-red-600 hover:underline">Reset pencarian</Link> : null}
-          </>
-        }
+        emptyAction={hasFilter ? <Link href="/products" className="text-sm font-semibold text-red-600 hover:underline">Reset pencarian</Link> : null}
       />
     </FilterPanel>
   );

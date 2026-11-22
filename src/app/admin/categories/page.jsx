@@ -1,4 +1,6 @@
 import { query } from "@/lib/db";
+import { Tags } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import ConfirmActionButton from "@/components/ConfirmActionButton";
 import { deleteCategoryAction } from "@/lib/actions/categories";
 import { CreateCategoryForm, EditCategory } from "./CategoryForm";
@@ -13,7 +15,7 @@ export default async function CategoriesPage() {
       <div className="mt-4 rounded-xl bg-white p-5 ring-1 ring-slate-200"><CreateCategoryForm /></div>
 
       {rows.length === 0 ? (
-        <p className="mt-6 rounded-xl bg-white p-8 text-center text-slate-600 ring-1 ring-slate-200">Belum ada kategori.</p>
+        <EmptyState icon={Tags} title="Belum ada kategori" description="Tambahkan kategori lewat form di atas." className="mt-6" />
       ) : (
         <ul className="mt-4 divide-y divide-slate-200 rounded-xl bg-white ring-1 ring-slate-200">
           {rows.map((c) => (
@@ -25,7 +27,7 @@ export default async function CategoriesPage() {
               <div className="flex items-start gap-2">
                 <EditCategory category={c} />
                 <ConfirmActionButton action={deleteCategoryAction.bind(null, c.id)} title="Hapus kategori?"
-                  message={`Kategori “${c.name}” akan dihapus permanen.`} confirmLabel="Ya, hapus">Hapus</ConfirmActionButton>
+                  message={`Kategori “${c.name}” akan dihapus permanen.`} confirmLabel="Ya, hapus" successToast="kategori-dihapus">Hapus</ConfirmActionButton>
               </div>
             </li>
           ))}

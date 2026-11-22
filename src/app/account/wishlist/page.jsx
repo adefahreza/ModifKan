@@ -18,12 +18,8 @@ export default async function WishlistPage() {
         products={products}
         showWishlist
         wishlistIds={products.map((p) => p.id)}
-        empty={
-          <>
-            <p className="font-semibold text-slate-900">Wishlist masih kosong</p>
-            <Link href="/products" className="text-sm font-semibold text-red-600 hover:underline">Jelajahi produk</Link>
-          </>
-        }
+        emptyTitle="Wishlist masih kosong"
+        emptyAction={<Link href="/products" className="text-sm font-semibold text-red-600 hover:underline">Jelajahi produk</Link>}
       />
     </div>
   );

@@ -1,10 +1,12 @@
 import Link from "next/link";
+import EmptyState from "@/components/ui/EmptyState";
 import { notFound } from "next/navigation";
-import { BadgeCheck, ChevronRight, Store } from "lucide-react";
+import { BadgeCheck, ChevronRight, MessageSquare, Store } from "lucide-react";
 import { query } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { formatDate, formatRupiah, imageUrl } from "@/lib/format";
 import BuyBox from "@/components/shop/BuyBox";
+import ProductImage from "@/components/shop/ProductImage";
 import CategoryIcon from "@/components/shop/CategoryIcon";
 import RatingStars from "@/components/shop/RatingStars";
 import StockLabel from "@/components/shop/StockLabel";
@@ -35,7 +37,7 @@ export default async function ProductDetailPage({ params }) {
       <div className="grid gap-6 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <div className="aspect-square overflow-hidden rounded-xl bg-slate-100 ring-1 ring-slate-200">
-            {p.image ? <img src={imageUrl(p.image)} alt={p.name} className="size-full object-cover" /> : (
+            {p.image ? <ProductImage src={imageUrl(p.image)} alt={p.name} categoryName={p.category_name} iconSize={64} className="size-full object-cover" /> : (
               <div className="flex size-full items-center justify-center text-slate-400"><CategoryIcon name={p.category_name} size={64} /></div>
             )}
           </div>
@@ -59,7 +61,7 @@ export default async function ProductDetailPage({ params }) {
           </div>
           <div className="flex items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-slate-200">
             <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100 text-slate-400">
-              {p.store_image ? <img src={imageUrl(p.store_image)} alt="" className="size-full object-cover" /> : <Store size={22} aria-hidden="true" />}
+              {p.store_image ? <ProductImage src={imageUrl(p.store_image)} fallback={<Store size={22} aria-hidden="true" />} className="size-full object-cover" /> : <Store size={22} aria-hidden="true" />}
             </div>
             <div className="min-w-0">
               <p className="truncate font-semibold text-slate-900">{p.store_name}</p>
@@ -74,7 +76,7 @@ export default async function ProductDetailPage({ params }) {
       <section aria-labelledby="ulasan" className="space-y-4">
         <h2 id="ulasan" className="font-display text-2xl font-bold uppercase text-slate-900">Ulasan</h2>
         {reviews.length === 0 ? (
-          <p className="rounded-xl bg-white p-6 text-center text-slate-600 ring-1 ring-slate-200">Belum ada ulasan</p>
+          <EmptyState icon={MessageSquare} title="Belum ada ulasan" className="py-8" />
         ) : (
           <>
             <div className="flex items-center gap-3">

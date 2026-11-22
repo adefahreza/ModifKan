@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { getCurrentUser } from "@/lib/auth";
 import { query } from "@/lib/db";
 import Navbar from "./Navbar";
 import BottomNav from "./BottomNav";
 import Footer from "./Footer";
+import FlashToast from "@/components/ui/FlashToast";
 
 export default async function ShopFrame({ children }) {
   const user = await getCurrentUser();
@@ -13,6 +15,7 @@ export default async function ShopFrame({ children }) {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6">{children}</main>
       <Footer showSellerLink={!user} />
       <BottomNav />
+      <Suspense fallback={null}><FlashToast /></Suspense>
     </div>
   );
 }

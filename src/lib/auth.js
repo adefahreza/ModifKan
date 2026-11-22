@@ -62,7 +62,7 @@ export async function destroySession() {
 export async function requireRole(...roles) {
   const user = await getCurrentUser();
   if (!user) redirect('/login');
-  if (!roles.includes(user.role)) redirect(homePathFor(user));
+  if (!roles.includes(user.role)) redirect('/403');
   return user;
 }
 
