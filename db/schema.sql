@@ -33,7 +33,7 @@ CREATE TABLE stores (
 
 CREATE TABLE categories (
   id         SERIAL PRIMARY KEY,
-  name       VARCHAR(50) NOT NULL UNIQUE,
+  name       VARCHAR(150) NOT NULL UNIQUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 -- Nama kategori unik tanpa membedakan huruf besar/kecil ("Turbo" = "turbo").

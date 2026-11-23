@@ -100,7 +100,7 @@ export function validateLogin(input) {
 export function validateCategory(input) {
   const values = { name: str(input.name).trim() };
   const errors = {};
-  const e = first(required(values.name, 'Nama kategori'), maxLength(values.name, 50, 'Nama kategori'));
+  const e = first(required(values.name, 'Nama kategori'), maxLength(values.name, 150, 'Nama kategori'));
   if (e) errors.name = e;
   return { values, errors };
 }
