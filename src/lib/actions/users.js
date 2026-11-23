@@ -36,7 +36,16 @@ export async function updateUserAction(userId, prevState, formData) {
 export async function deleteUserAction(userId) {
   const admin = await requireRole('admin');
   const id = Number(userId);
-  if (!Number.isInteger(id)) return { message: 'Pengguna tidak dapat dihapus' };
+  if (!Number.isInteger(id) || id < 1 || id > 2147483647) return { message: 'Pengguna tidak dapat dihapus' };
+
+  const { rows: [active] } = await query('users/count-active-orders', [id]);
+  if (active.as_buyer > 0) {
+    return { message: `Pengguna tidak dapat dihapus: masih ada ${active.as_buyer} pesanan berjalan sebagai pembeli.` };
+  }
+  if (active.as_seller > 0) {
+    return { message: `Pengguna tidak dapat dihapus: toko miliknya masih punya ${active.as_seller} pesanan berjalan.` };
+  }
+
   const { rows: files } = await query('users/list-image-files', [id]);
   const { rowCount } = await query('users/delete', [id, admin.id]);
   if (rowCount === 0) return { message: 'Pengguna tidak dapat dihapus' };

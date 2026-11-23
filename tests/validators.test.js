@@ -58,7 +58,8 @@ test('normalizeEmail & hasErrors', () => {
 
 test('kategori', () => {
   assert.equal(validateCategory({ name: '  ' }).errors.name, 'Nama kategori wajib diisi');
-  assert.equal(validateCategory({ name: 'x'.repeat(51) }).errors.name, 'Nama kategori maksimal 50 karakter');
+  assert.equal(validateCategory({ name: 'x'.repeat(150) }).errors.name, undefined);
+  assert.equal(validateCategory({ name: 'x'.repeat(151) }).errors.name, 'Nama kategori maksimal 150 karakter');
   assert.equal(validateCategory({ name: ' Turbo ' }).values.name, 'Turbo');
 });
 test('produk baru valid', () => {
@@ -107,7 +108,8 @@ test('ulasan', () => {
   assert.deepEqual(validateReview({ rating: '5', comment: ' Mantap, pas! ' }).values, { rating: 5, comment: 'Mantap, pas!' });
   const { errors } = validateReview({ rating: '6', comment: 'ok' });
   assert.equal(errors.rating, 'Rating harus antara 1 dan 5');
-  assert.equal(errors.comment, 'Komentar minimal 5 karakter');
+  assert.equal(errors.comment, undefined);
+  assert.equal(validateReview({ rating: '5', comment: '   ' }).errors.comment, 'Komentar wajib diisi');
   assert.equal(validateReview({ rating: '', comment: 'x'.repeat(1001) }).errors.comment, 'Komentar maksimal 1000 karakter');
   assert.equal(validateReview({ rating: '', comment: 'bagus sekali' }).errors.rating, 'Rating wajib dipilih');
 });

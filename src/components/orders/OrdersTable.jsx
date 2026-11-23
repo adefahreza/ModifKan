@@ -22,9 +22,10 @@ export default function OrdersTable({ orders, hrefBase, columns = {} }) {
           </thead>
           <tbody className="divide-y divide-slate-200">
             {orders.map((o) => (
-              <tr key={o.id} className="hover:bg-slate-50">
+              // Link nomor pesanan diperluas (after:inset-0) menutupi seluruh baris, jadi baris mana pun bisa diklik.
+              <tr key={o.id} className="group relative cursor-pointer transition-colors hover:bg-slate-50 focus-within:bg-slate-50">
                 <td className="px-4 py-3">
-                  <Link href={`${hrefBase}/${o.id}`} className="font-semibold text-red-600 hover:underline">{formatOrderNumber(o.id)}</Link>
+                  <Link href={`${hrefBase}/${o.id}`} className="font-semibold text-red-600 after:absolute after:inset-0 group-hover:underline focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-red-500">{formatOrderNumber(o.id)}</Link>
                 </td>
                 <td className="whitespace-nowrap px-4 py-3">{formatDate(o.created_at)}</td>
                 {parties.map((p) => <td key={p.key} className="px-4 py-3">{p.value(o)}</td>)}
@@ -40,7 +41,7 @@ export default function OrdersTable({ orders, hrefBase, columns = {} }) {
       <ul className="space-y-3 md:hidden">
         {orders.map((o) => (
           <li key={o.id}>
-            <Link href={`${hrefBase}/${o.id}`} className="block rounded-xl bg-white p-4 ring-1 ring-slate-200 hover:ring-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+            <Link href={`${hrefBase}/${o.id}`} className="block cursor-pointer rounded-xl bg-white p-4 ring-1 ring-slate-200 transition hover:bg-slate-50 hover:shadow-md hover:ring-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <p className="font-semibold text-slate-900">{formatOrderNumber(o.id)}</p>

@@ -60,7 +60,7 @@ export async function loginAction(prevState, formData) {
 
 export async function logoutAction() {
   await destroySession();
-  redirect('/');
+  redirect('/login');
 }
 
 export async function deleteRejectedAccountAction() {
