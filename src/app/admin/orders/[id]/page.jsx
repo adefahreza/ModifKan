@@ -37,7 +37,7 @@ export default async function AdminOrderDetailPage({ params }) {
         <span className="font-semibold text-slate-900">{order.store_name ?? "Toko telah dihapus"}</span>
       </p>
       <OrderTimeline status={order.status} />
-      <OrderItemsList items={items} />
+      <OrderItemsList items={items} productHref={(id) => `/admin/products/${id}`} />
     </div>
   );
 }

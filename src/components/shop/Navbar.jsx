@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { LayoutGrid, Search, ShoppingCart } from "lucide-react";
-import { homePathFor } from "@/lib/auth-rules";
 import Logo from "@/components/Logo";
 import Button from "@/components/ui/Button";
 import CartBadge from "./CartBadge";
@@ -8,8 +7,8 @@ import UserMenu from "./UserMenu";
 
 const iconLink = "relative inline-flex size-11 items-center justify-center rounded-lg text-white hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500";
 
+// Navbar toko hanya tampil untuk Guest dan Buyer (Seller/Admin dialihkan ke dashboard di layout).
 export default function Navbar({ user, cartCount = 0 }) {
-  const isBuyer = user?.role === "buyer";
   return (
     <header>
       <div className="bg-slate-900">
@@ -41,7 +40,7 @@ export default function Navbar({ user, cartCount = 0 }) {
               <Button as={Link} href="/register" size="md">Daftar</Button>
             </div>
           ) : (
-            <UserMenu name={user.name} email={user.email} href={isBuyer ? "/account" : homePathFor(user)} isBuyer={isBuyer} />
+            <UserMenu name={user.name} email={user.email} />
           )}
         </div>
       </div>

@@ -68,10 +68,11 @@ test('Buyer simpan dua produk, tampil di wishlist, lalu hapus', async ({ page })
   }
 });
 
-test('Seller tidak melihat hati dan API menolak (403)', async ({ page }) => {
+test('Seller tidak bisa membuka katalog dan API wishlist menolak (403)', async ({ page }) => {
   await login(page, 'garasijaya@modifkan.test');
   await page.goto('/products');
-  await expect(page.locator('article').first()).toBeVisible();
+  // Halaman toko tertutup untuk Seller: dialihkan ke dashboard, jadi tombol wishlist tidak pernah tampil.
+  await expect(page).toHaveURL(/\/seller$/);
   await expect(page.getByRole('button', { name: /wishlist/i })).toHaveCount(0);
   const res = await page.request.post('/api/wishlist', { data: { productId: 1 } });
   expect(res.status()).toBe(403);

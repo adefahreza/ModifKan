@@ -72,7 +72,7 @@ export default async function Home() {
           <h2 id="produk" className="font-display text-2xl font-bold uppercase text-slate-900">{isBuyer ? "Rekomendasi untukmu" : "Produk terbaru"}</h2>
           <Link href="/products" className="text-sm font-semibold text-red-600 hover:underline">Lihat semua</Link>
         </div>
-        <ProductGrid products={products} showCart={!user || isBuyer} wishlistIds={wishlistIds} emptyTitle="Belum ada produk" />
+        <ProductGrid products={products} wishlistIds={wishlistIds} emptyTitle="Belum ada produk" />
       </section>
     </div>
   );

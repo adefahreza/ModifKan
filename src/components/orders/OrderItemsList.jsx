@@ -3,7 +3,8 @@ import { Package } from "lucide-react";
 import ProductImage from "@/components/shop/ProductImage";
 import { formatRupiah, imageUrl } from "@/lib/format";
 
-export default function OrderItemsList({ items, renderItemExtra }) {
+// productHref: tujuan link nama produk. Buyer ke halaman toko; Seller/Admin ke detail produk di dashboard masing-masing.
+export default function OrderItemsList({ items, renderItemExtra, productHref = (id) => `/products/${id}` }) {
   return (
     <ul className="divide-y divide-slate-200 rounded-xl bg-white ring-1 ring-slate-200">
       {items.map((item) => (
@@ -18,7 +19,7 @@ export default function OrderItemsList({ items, renderItemExtra }) {
             )}
             <div className="min-w-0 flex-1">
               {item.product_id ? (
-                <Link href={`/products/${item.product_id}`} className="line-clamp-2 font-semibold text-slate-900 hover:text-red-600">{item.product_name}</Link>
+                <Link href={productHref(item.product_id)} className="line-clamp-2 font-semibold text-slate-900 hover:text-red-600">{item.product_name}</Link>
               ) : (
                 <p className="line-clamp-2 font-semibold text-slate-900">{item.product_name}</p>
               )}

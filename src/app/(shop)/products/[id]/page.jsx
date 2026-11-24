@@ -23,8 +23,8 @@ export default async function ProductDetailPage({ params }) {
   if (!p) notFound();
 
   const [user, { rows: reviews }] = await Promise.all([getCurrentUser(), query("reviews/list-by-product", [p.id])]);
-  const canBuy = !user || user.role === "buyer";
-  const saved = user?.role === "buyer" && (await query("wishlist/ids", [user.id])).rows.some((r) => r.product_id === p.id);
+  // Halaman toko hanya untuk Guest dan Buyer (lihat layout), jadi user di sini pasti Buyer bila login.
+  const saved = Boolean(user) && (await query("wishlist/ids", [user.id])).rows.some((r) => r.product_id === p.id);
 
   return (
     <div className="space-y-8 pb-20 lg:pb-0">
@@ -54,7 +54,7 @@ export default async function ProductDetailPage({ params }) {
             <StockLabel stock={p.stock} />
           </div>
           <p className="font-display text-4xl font-bold text-slate-900">{formatRupiah(p.price)}</p>
-          {canBuy ? <WishlistButton productId={p.id} initialSaved={saved} showLabel className="!bg-white" /> : null}
+          <WishlistButton productId={p.id} initialSaved={saved} showLabel className="!bg-white" />
           <div>
             <h2 className="mb-1 font-semibold text-slate-900">Deskripsi</h2>
             <p className="whitespace-pre-line text-slate-700">{p.description}</p>
@@ -70,7 +70,7 @@ export default async function ProductDetailPage({ params }) {
           </div>
         </div>
 
-        {canBuy ? <div className="lg:col-span-3"><BuyBox productId={p.id} price={p.price} stock={p.stock} /></div> : null}
+        <div className="lg:col-span-3"><BuyBox productId={p.id} price={p.price} stock={p.stock} /></div>
       </div>
 
       <section aria-labelledby="ulasan" className="space-y-4">

@@ -42,7 +42,6 @@ export default async function ProductsPage({ searchParams }) {
     >
       <ProductGrid
         products={products}
-        showCart={!user || user.role === "buyer"}
         wishlistIds={wishlistIds}
         emptyAction={hasFilter ? <Link href="/products" className="text-sm font-semibold text-red-600 hover:underline">Reset pencarian</Link> : null}
       />

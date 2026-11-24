@@ -48,12 +48,18 @@ test('menu profil: klik membuka, Esc menutup dan fokus kembali ke tombol', async
   await expect(trigger).toBeFocused();
 });
 
-test('seller: menu profil berisi Dashboard', async ({ page }) => {
+test('seller dan admin tidak bisa membuka halaman toko, dialihkan ke dashboard', async ({ page }) => {
   await login(page, 'kakikuat@modifkan.test');
-  await openHome(page);
-  await page.getByRole('button', { name: /Menu akun/ }).click();
-  await page.getByRole('link', { name: 'Dashboard' }).click();
-  await expect(page).toHaveURL(/\/seller$/);
+  for (const path of ['/', '/products', '/cart']) {
+    await page.goto(path);
+    await expect(page).toHaveURL(/\/seller$/);
+  }
+  await page.context().clearCookies();
+  await login(page, 'admin@modifkan.test', 'admin12345');
+  for (const path of ['/', '/products/1', '/checkout']) {
+    await page.goto(path);
+    await expect(page).toHaveURL(/\/admin$/);
+  }
 });
 
 test('layar kecil: menu profil tetap bisa dipakai untuk keluar', async ({ page }) => {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
-import { ChevronDown, LayoutDashboard, LogOut, User } from "lucide-react";
+import { ChevronDown, LogOut, User } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 
 function initials(name) {
@@ -12,8 +12,8 @@ function initials(name) {
 
 const itemClass = "flex min-h-11 w-full items-center gap-3 px-4 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-500";
 
-// Menu profil di navbar: terbuka saat hover (mouse), klik/tap, atau keyboard. Esc dan klik di luar menutupnya.
-export default function UserMenu({ name, email, href, isBuyer }) {
+// Menu profil Buyer di navbar: terbuka saat hover (mouse), klik/tap, atau keyboard. Esc dan klik di luar menutupnya.
+export default function UserMenu({ name, email }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
   const buttonRef = useRef(null);
@@ -88,9 +88,8 @@ export default function UserMenu({ name, email, href, isBuyer }) {
               <p className="truncate text-sm font-semibold text-slate-900">{name}</p>
               <p className="truncate text-xs text-slate-500">{email}</p>
             </div>
-            <Link href={href} onClick={close} className={`${itemClass} text-slate-700 hover:bg-slate-100`}>
-              {isBuyer ? <User size={18} aria-hidden="true" /> : <LayoutDashboard size={18} aria-hidden="true" />}
-              {isBuyer ? "Akun saya" : "Dashboard"}
+            <Link href="/account" onClick={close} className={`${itemClass} text-slate-700 hover:bg-slate-100`}>
+              <User size={18} aria-hidden="true" /> Akun saya
             </Link>
             <form action={logoutAction} className="border-t border-slate-200">
               <button type="submit" className={`${itemClass} text-red-600 hover:bg-red-50`}>

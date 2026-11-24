@@ -40,7 +40,7 @@ export default async function SellerOrderDetailPage({ params }) {
       </Link>
       <OrderSummary order={order} party={party} />
       <OrderTimeline status={order.status} />
-      <OrderItemsList items={items} />
+      <OrderItemsList items={items} productHref={(id) => `/seller/products/${id}`} />
       <OrderActions actions={actions} />
     </div>
   );
