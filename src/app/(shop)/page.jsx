@@ -9,9 +9,9 @@ import ProductGrid from "@/components/shop/ProductGrid";
 export const dynamic = "force-dynamic";
 
 const PERKS = [
-  { icon: BadgeCheck, text: "Seller terverifikasi" },
-  { icon: Store, text: "Banyak toko, satu checkout" },
-  { icon: Truck, text: "Lacak status pesanan" },
+  { icon: BadgeCheck, text: "Seller terverifikasi", note: "Tiap toko ditinjau admin" },
+  { icon: Store, text: "Banyak toko, satu checkout", note: "Satu keranjang untuk semua toko" },
+  { icon: Truck, text: "Lacak status pesanan", note: "Dari diproses sampai diterima" },
 ];
 
 export default async function Home() {
@@ -40,11 +40,15 @@ export default async function Home() {
         </div>
       </section>
 
-      <ul className="grid gap-3 sm:grid-cols-3">
-        {PERKS.map(({ icon: Icon, text }) => (
-          <li key={text} className="flex items-center gap-3 rounded-xl bg-white p-4 ring-1 ring-slate-200">
-            <span className="flex size-10 items-center justify-center rounded-lg bg-red-50 text-red-600"><Icon size={20} aria-hidden="true" /></span>
-            <span className="text-sm font-semibold text-slate-900">{text}</span>
+      {/* Info keunggulan sengaja tanpa kotak supaya tidak terbaca sebagai tombol seperti kartu kategori. */}
+      <ul className="grid gap-4 sm:grid-cols-3 sm:gap-6">
+        {PERKS.map(({ icon: Icon, text, note }) => (
+          <li key={text} className="flex items-start gap-3 border-l-[3px] border-red-600 py-0.5 pl-3">
+            <Icon size={24} aria-hidden="true" className="mt-0.5 shrink-0 text-red-600" />
+            <div>
+              <p className="font-display text-lg font-bold uppercase italic leading-tight text-slate-900">{text}</p>
+              <p className="mt-0.5 text-sm text-slate-500">{note}</p>
+            </div>
           </li>
         ))}
       </ul>

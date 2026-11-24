@@ -5,7 +5,7 @@ export default function Footer({ showSellerLink = true }) {
   return (
     <footer className="mt-12 bg-slate-900 text-slate-400">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 sm:px-6 md:flex-row md:items-center md:justify-between">
-        <Logo size="sm" />
+        <Link href="/" aria-label="ModifKan beranda" className="w-fit rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"><Logo size="sm" /></Link>
         <nav aria-label="Tautan footer" className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
           <Link href="/products" className="hover:text-white">Semua produk</Link>
           {showSellerLink ? <Link href="/register?role=seller" className="hover:text-white">Buka toko</Link> : null}

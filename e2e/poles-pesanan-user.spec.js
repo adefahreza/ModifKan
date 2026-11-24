@@ -27,6 +27,12 @@ test.describe('logout', () => {
   });
 });
 
+test('logo footer membuka beranda', async ({ page }) => {
+  await page.goto('/products');
+  await page.getByRole('contentinfo').getByRole('link', { name: 'ModifKan beranda' }).click();
+  await expect(page).toHaveURL(/\/$/);
+});
+
 test.describe('baris pesanan bisa diklik', () => {
   for (const [email, path] of [['speedshop@modifkan.test', '/seller/orders'], ['admin@modifkan.test', '/admin/orders']]) {
     test(`klik di luar nomor pesanan membuka detail (${path})`, async ({ page }) => {
