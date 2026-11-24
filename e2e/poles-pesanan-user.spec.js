@@ -12,9 +12,11 @@ async function login(page, email, password = 'modifkan123') {
 }
 
 test.describe('logout', () => {
-  test('buyer keluar dari navbar diarahkan ke login', async ({ page }) => {
+  test('buyer keluar lewat menu profil di navbar diarahkan ke login', async ({ page }) => {
     await login(page, 'bagas@modifkan.test');
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('button', { name: /Menu akun/ }).click();
     await page.getByRole('button', { name: 'Keluar' }).click();
     await expect(page).toHaveURL(/\/login$/);
   });

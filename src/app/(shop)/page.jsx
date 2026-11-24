@@ -59,8 +59,9 @@ export default async function Home() {
           {categories.map((c) => (
             <Link key={c.id} href={`/products?category=${c.id}`}
               className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl bg-white p-3 text-center ring-1 ring-slate-200 transition-colors hover:bg-slate-900 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">
-              <CategoryIcon name={c.name} size={26} className="text-red-600" />
-              <span className="text-xs font-semibold">{c.name}</span>
+              <CategoryIcon name={c.name} size={26} className="shrink-0 text-red-600" />
+              {/* Area label selalu setinggi 2 baris supaya ikon sejajar walau labelnya 1 atau 2 baris. */}
+              <span className="flex min-h-[2lh] items-center text-xs font-semibold">{c.name}</span>
             </Link>
           ))}
         </div>

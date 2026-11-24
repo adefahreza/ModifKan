@@ -16,13 +16,14 @@ export default function ProductCard({ product, showCart = true, showWishlist = f
         <div className="relative aspect-square overflow-hidden bg-slate-100">
           <ProductImage src={imageUrl(p.image)} alt={p.name} categoryName={p.category_name} iconSize={40} loading="lazy"
             className="size-full object-cover transition-transform duration-300 group-hover:scale-105" />
-          {/* Satu baris: badge stok tidak menyusut, nama kategori yang panjang dipotong "…" */}
+          {/* Satu baris: badge stok tidak menyusut, nama kategori yang panjang dipotong "…".
+              Di kartu hanya "Stok habis" yang tampil; "Sisa N" cukup di halaman detail. */}
           <div className="absolute inset-x-2 top-2 flex items-start justify-between gap-1">
             <span data-badge="kategori" className="inline-flex min-w-0 items-center gap-1 rounded-full bg-slate-900 px-2 py-1 text-xs font-semibold text-white">
               <CategoryIcon name={p.category_name} size={12} className="shrink-0" />
               <span className="truncate">{p.category_name}</span>
             </span>
-            <StockLabel stock={p.stock} className="shrink-0" />
+            {p.stock === 0 ? <StockLabel stock={p.stock} className="shrink-0" /> : null}
           </div>
         </div>
       </Link>
