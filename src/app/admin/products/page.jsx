@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Search } from "lucide-react";
 import { Package } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
@@ -13,6 +14,11 @@ export const metadata = { title: "Moderasi Produk — ModifKan" };
 
 function Stock({ n }) {
   return n === 0 ? <Badge tone="red">Habis</Badge> : <span>{n}</span>;
+}
+
+// Nama produk membuka detail produk di dashboard admin.
+function NameLink({ p }) {
+  return <Link href={`/admin/products/${p.id}`} className="rounded hover:text-red-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">{p.name}</Link>;
 }
 
 function DeleteButton({ p }) {
@@ -48,7 +54,7 @@ export default async function AdminProductsPage({ searchParams }) {
                 {rows.map((p) => (
                   <tr key={p.id}>
                     <td className="px-4 py-3"><ProductImage src={imageUrl(p.image)} categoryName={p.category_name} iconSize={20} className="size-12 rounded-lg object-cover" /></td>
-                    <td className="px-4 py-3 font-semibold">{p.name}</td>
+                    <td className="px-4 py-3 font-semibold"><NameLink p={p} /></td>
                     <td className="px-4 py-3">{p.store_name}</td>
                     <td className="px-4 py-3">{p.category_name}</td>
                     <td className="px-4 py-3">{formatRupiah(p.price)}</td>
@@ -65,7 +71,7 @@ export default async function AdminProductsPage({ searchParams }) {
                 <div className="flex gap-3">
                   <ProductImage src={imageUrl(p.image)} categoryName={p.category_name} iconSize={24} className="size-16 rounded-lg object-cover" />
                   <div className="min-w-0">
-                    <p className="font-semibold">{p.name}</p>
+                    <p className="font-semibold"><NameLink p={p} /></p>
                     <p className="text-sm text-slate-600">{p.store_name} · {p.category_name}</p>
                     <p className="text-sm text-slate-600">{formatRupiah(p.price)} · Stok: <Stock n={p.stock} /></p>
                   </div>

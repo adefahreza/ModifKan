@@ -59,12 +59,23 @@ test.describe('poles UI dashboard seller', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
   test.beforeEach(async ({ page }) => { await login(page, 'garasijaya@modifkan.test'); });
 
-  test('Edit Toko: info dan gambar berdampingan di desktop', async ({ page }) => {
+  test('Edit Toko: satu kartu, banner di atas, gambar dan info berdampingan', async ({ page }) => {
     await open(page, '/seller/store/edit');
+    const banner = page.getByRole('region', { name: 'Garasi Jaya' });
+    await expect(banner.getByText(/Buka sejak \d+ \w+ \d{4}/)).toBeVisible();
+    const b = await banner.boundingBox();
     const name = await page.getByLabel('Nama toko').boundingBox();
     const image = await page.getByRole('region', { name: 'Gambar toko' }).boundingBox();
-    expect(image.x).toBeGreaterThan(name.x + name.width);
+    expect(image.y).toBeGreaterThanOrEqual(b.y + b.height);
+    expect(name.x).toBeGreaterThan(image.x + image.width);
     await expect(page.getByRole('button', { name: 'Simpan' })).toBeVisible();
+  });
+
+  test('Edit Toko: simpan tetap berfungsi', async ({ page }) => {
+    await open(page, '/seller/store/edit');
+    await page.getByRole('button', { name: 'Simpan' }).click();
+    await expect(page).toHaveURL(/\/seller\/store(\?|$)/);
+    await expect(page.getByRole('status').filter({ hasText: 'Perubahan toko tersimpan' })).toBeVisible();
   });
 
   test('Toko Saya: ada daftar produk toko', async ({ page }) => {
@@ -95,14 +106,26 @@ test.describe('poles UI dashboard admin', () => {
     expect(await rows.count()).toBeLessThanOrEqual(5);
   });
 
-  test('Edit Pengguna: kartu profil di samping form', async ({ page }) => {
+  test('Edit Pengguna: banner profil di atas, form dan ringkasan berdampingan', async ({ page }) => {
     await open(page, '/admin/users/2/edit');
-    const profile = page.getByRole('region', { name: 'Profil pengguna' });
+    const profile = page.locator('section').filter({ has: page.getByText('buyer', { exact: true }) }).first();
     await expect(profile).toBeVisible();
-    await expect(profile.getByText('buyer', { exact: true })).toBeVisible();
+    await expect(profile.getByText(/Bergabung \d+ \w+ \d{4}/)).toBeVisible();
     const p = await profile.boundingBox();
     const name = await page.getByLabel('Nama').boundingBox();
-    expect(name.x).toBeGreaterThan(p.x + p.width);
+    expect(name.y).toBeGreaterThan(p.y + p.height);
+
+    const summary = page.getByRole('region', { name: 'Ringkasan belanja' });
+    await expect(summary.getByText('Pesanan berjalan')).toBeVisible();
+    const s = await summary.boundingBox();
+    expect(s.x).toBeGreaterThan(name.x + name.width);
+  });
+
+  test('Edit Pengguna seller: ringkasan toko', async ({ page }) => {
+    await open(page, '/admin/users/5/edit');
+    const summary = page.getByRole('region', { name: 'Ringkasan toko' });
+    await expect(summary.getByText('Produk', { exact: true })).toBeVisible();
+    await expect(summary.getByText('Pesanan masuk')).toBeVisible();
   });
 
   test('Edit kategori: satu baris sejajar, Hapus disembunyikan', async ({ page }) => {

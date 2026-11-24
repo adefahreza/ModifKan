@@ -108,42 +108,48 @@ test.describe('toast', () => {
 
 const toastOf = (page, text) => page.getByRole('status').filter({ hasText: text });
 
-test('toast keranjang: tambah, ubah jumlah, hapus; error tetap inline', async ({ page }) => {
-  await login(page, 'dewi@modifkan.test');
-  await page.goto('/products');
-  const card = page.locator('article').first();
-  const productId = Number((await card.getByRole('link').first().getAttribute('href')).split('/').pop());
-  try {
-    await expect(async () => {
-      await card.getByRole('button', { name: /^Tambah$/ }).click({ timeout: 2000 });
-      await expect(toastOf(page, 'Ditambahkan ke keranjang')).toBeVisible({ timeout: 2000 });
-    }).toPass({ timeout: 10000 });
+// Kedua tes memakai keranjang akun dewi dan produk yang sama; kalau paralel saling mengganggu
+// (tes error menghabiskan stok saat tes toast menambah produk). Jadi dijalankan berurutan.
+test.describe('keranjang dewi', () => {
+  test.describe.configure({ mode: 'serial' });
 
-    await page.goto('/cart');
-    await page.getByRole('button', { name: /^Tambah jumlah/ }).first().click();
-    await expect(toastOf(page, 'Jumlah diperbarui')).toBeVisible();
-    await page.getByRole('button', { name: /^Hapus .* dari keranjang$/ }).first().click();
-    await expect(toastOf(page, 'Produk dihapus dari keranjang')).toBeVisible();
-  } finally {
-    await page.request.delete('/api/cart', { data: { productId } });
-  }
-});
+  test('toast keranjang: tambah, ubah jumlah, hapus; error tetap inline', async ({ page }) => {
+    await login(page, 'dewi@modifkan.test');
+    await page.goto('/products');
+    const card = page.locator('article').first();
+    const productId = Number((await card.getByRole('link').first().getAttribute('href')).split('/').pop());
+    try {
+      await expect(async () => {
+        await card.getByRole('button', { name: /^Tambah$/ }).click({ timeout: 2000 });
+        await expect(toastOf(page, 'Ditambahkan ke keranjang')).toBeVisible({ timeout: 2000 });
+      }).toPass({ timeout: 10000 });
 
-test('error keranjang tetap inline di dekat tombol (tanpa toast)', async ({ page }) => {
-  await login(page, 'dewi@modifkan.test');
-  await page.goto('/products');
-  // Stok dihabiskan lewat API lalu klik "Tambah" lagi: pesan stok muncul di tombol.
-  const card = page.locator('article').first();
-  const productId = Number((await card.getByRole('link').first().getAttribute('href')).split('/').pop());
-  try {
-    const res = await page.request.post('/api/cart', { data: { productId, qty: 100000 } });
-    expect(res.status()).toBe(409);
-    await expect(async () => {
-      await page.evaluate(async (id) => { await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, qty: 1 }) }); }, productId);
-    }).toPass();
-  } finally {
-    await page.request.delete('/api/cart', { data: { productId } });
-  }
+      await page.goto('/cart');
+      await page.getByRole('button', { name: /^Tambah jumlah/ }).first().click();
+      await expect(toastOf(page, 'Jumlah diperbarui')).toBeVisible();
+      await page.getByRole('button', { name: /^Hapus .* dari keranjang$/ }).first().click();
+      await expect(toastOf(page, 'Produk dihapus dari keranjang')).toBeVisible();
+    } finally {
+      await page.request.delete('/api/cart', { data: { productId } });
+    }
+  });
+
+  test('error keranjang tetap inline di dekat tombol (tanpa toast)', async ({ page }) => {
+    await login(page, 'dewi@modifkan.test');
+    await page.goto('/products');
+    // Stok dihabiskan lewat API lalu klik "Tambah" lagi: pesan stok muncul di tombol.
+    const card = page.locator('article').first();
+    const productId = Number((await card.getByRole('link').first().getAttribute('href')).split('/').pop());
+    try {
+      const res = await page.request.post('/api/cart', { data: { productId, qty: 100000 } });
+      expect(res.status()).toBe(409);
+      await expect(async () => {
+        await page.evaluate(async (id) => { await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, qty: 1 }) }); }, productId);
+      }).toPass();
+    } finally {
+      await page.request.delete('/api/cart', { data: { productId } });
+    }
+  });
 });
 
 async function deleteTestCategories(page, name) {

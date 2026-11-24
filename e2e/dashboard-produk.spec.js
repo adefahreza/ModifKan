@@ -45,6 +45,17 @@ test('seller: nama produk di menu Produk membuka detail produk', async ({ page }
   await expectDashboardOnly(page, 'Produk');
 });
 
+test('admin: nama produk di Moderasi Produk membuka detail produk', async ({ page }) => {
+  await login(page, 'admin@modifkan.test', 'admin12345');
+  await page.goto('/admin/products');
+  const link = page.locator('tbody tr').first().getByRole('link').first();
+  const name = (await link.textContent()).trim();
+  await link.click();
+  await expect(page).toHaveURL(/\/admin\/products\/\d+$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(name);
+  await expectDashboardOnly(page, 'Moderasi Produk');
+});
+
 test('admin: produk di detail pesanan membuka detail produk di dashboard admin', async ({ page }) => {
   await login(page, 'admin@modifkan.test', 'admin12345');
   await openFirstOrderProduct(page, '/admin/orders');

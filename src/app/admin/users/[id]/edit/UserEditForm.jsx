@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { Lock } from "lucide-react";
 import { updateUserAction } from "@/lib/actions/users";
 import Field from "@/components/ui/Field";
 import Button from "@/components/ui/Button";
@@ -25,6 +26,7 @@ export default function UserEditForm({ user }) {
           <Field label="Email" name="email" type="email" defaultValue={state.values.email} error={state.errors.email} />
           <Field label="Nomor HP" name="phone" type="tel" defaultValue={state.values.phone} error={state.errors.phone} />
         </div>
+        <p className="flex items-center gap-1.5 text-xs text-slate-500"><Lock size={13} aria-hidden="true" /> Peran tidak dapat diubah.</p>
       </div>
       <div className="flex justify-end gap-2 border-t border-slate-200 bg-slate-50 px-5 py-3">
         <Button as={Link} href="/admin/users" variant="secondary">Batal</Button>
