@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validateRegister, validateLogin, isPhone, intInRange, isImageFile, normalizeEmail, hasErrors,
-  validateCategory, validateStore, validateProduct, validateUserEdit, validateReview, validatePasswordChange, validateAddress } from '../src/lib/validators.js';
+  validateCategory, validateStore, validateProduct, validateUserEdit, validateReview, validatePasswordChange, validateAddress, validateAvatar } from '../src/lib/validators.js';
 
 test('register buyer valid', () => {
   const { values, errors } = validateRegister({ role: 'buyer', name: ' Budi ', email: ' Budi@Mail.com ',
@@ -49,6 +49,14 @@ test('isImageFile', () => {
   assert.equal(isImageFile({ size: 10, type: 'image/gif', name: 'a.gif' }, { required: true }), 'Format gambar harus JPG, PNG, atau WEBP');
   assert.equal(isImageFile({ size: 0, type: '', name: '' }, { required: true }), 'Gambar wajib diunggah');
   assert.equal(isImageFile({ size: 0, type: '', name: '' }, { required: false }), null);
+});
+test('validateAvatar', () => {
+  const f = (size, type) => ({ size, type, name: 'a' });
+  assert.deepEqual(validateAvatar(f(1024, 'image/png')), {});
+  assert.deepEqual(validateAvatar(null), { avatar: 'Pilih foto terlebih dahulu' });
+  assert.deepEqual(validateAvatar(f(0, '')), { avatar: 'Pilih foto terlebih dahulu' });
+  assert.deepEqual(validateAvatar(f(10, 'image/gif')), { avatar: 'Format gambar harus JPG, PNG, atau WEBP' });
+  assert.deepEqual(validateAvatar(f(3 * 1024 * 1024, 'image/png')), { avatar: 'Ukuran gambar maksimal 2 MB' });
 });
 test('normalizeEmail & hasErrors', () => {
   assert.equal(normalizeEmail(' Budi@Mail.COM '), 'budi@mail.com');

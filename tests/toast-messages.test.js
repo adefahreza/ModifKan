@@ -17,7 +17,8 @@ test('toastMessage', () => {
 test('TOASTS memuat kunci minimal dari rencana', () => {
   for (const k of ['produk-disimpan', 'produk-dihapus', 'toko-disimpan', 'pesanan-dibuat', 'status-diperbarui', 'profil-disimpan', 'alamat-disimpan', 'akun-dihapus',
     'keranjang-ditambah', 'keranjang-diperbarui', 'keranjang-dihapus', 'password-diubah', 'ulasan-terkirim',
-    'kategori-ditambah', 'kategori-disimpan', 'seller-disetujui', 'seller-ditolak']) {
+    'kategori-ditambah', 'kategori-disimpan', 'seller-disetujui', 'seller-ditolak',
+    'foto-profil-disimpan', 'foto-profil-dihapus']) {
     assert.ok(typeof TOASTS[k] === 'string' && TOASTS[k], k);
   }
 });

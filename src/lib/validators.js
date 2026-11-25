@@ -56,6 +56,11 @@ export function isImageFile(file, { required: isRequired = false } = {}) {
   return null;
 }
 
+export function validateAvatar(file) {
+  const msg = !file || !file.size ? 'Pilih foto terlebih dahulu' : isImageFile(file);
+  return msg ? { avatar: msg } : {};
+}
+
 const first = (...checks) => checks.find((e) => e) ?? null;
 
 export function validateRegister(input) {

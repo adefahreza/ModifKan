@@ -4,16 +4,12 @@ import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown, LogOut, User } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
-
-function initials(name) {
-  const parts = String(name ?? "").trim().split(/\s+/).filter(Boolean);
-  return ((parts[0]?.[0] ?? "") + (parts.length > 1 ? parts.at(-1)[0] : "")).toUpperCase() || "?";
-}
+import UserAvatar from "@/components/account/UserAvatar";
 
 const itemClass = "flex min-h-11 w-full items-center gap-3 px-4 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-500";
 
 // Menu profil Buyer di navbar: terbuka saat hover (mouse), klik/tap, atau keyboard. Esc dan klik di luar menutupnya.
-export default function UserMenu({ name, email }) {
+export default function UserMenu({ name, email, avatar }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
   const buttonRef = useRef(null);
@@ -75,7 +71,9 @@ export default function UserMenu({ name, email }) {
     <div ref={rootRef} className="relative" onPointerEnter={onPointerEnter} onPointerLeave={onPointerLeave}>
       <button ref={buttonRef} type="button" onClick={onClick} aria-expanded={open} aria-controls={panelId}
         className={`inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-white hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 lg:px-3 ${open ? "bg-slate-800" : ""}`}>
-        <span aria-hidden="true" className="inline-flex size-7 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-700">{initials(name)}</span>
+        <span aria-hidden="true" className="inline-flex size-7 shrink-0 overflow-hidden rounded-full">
+          <UserAvatar name={name} avatar={avatar} alt="" className="size-full" fallbackClassName="bg-red-100 text-xs font-bold text-red-700" />
+        </span>
         <span className="hidden lg:inline">{firstName}</span>
         <span className="sr-only">Menu akun</span>
         <ChevronDown size={16} aria-hidden="true" className={`hidden transition-transform lg:block ${open ? "rotate-180" : ""}`} />

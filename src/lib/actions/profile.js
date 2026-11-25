@@ -4,7 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { query, withTransaction } from '../db.js';
 import { SESSION_COOKIE, hashPassword, requireRole, verifyPassword } from '../auth.js';
-import { validatePasswordChange, validateUserEdit, hasErrors } from '../validators.js';
+import { validateAvatar, validatePasswordChange, validateUserEdit, hasErrors } from '../validators.js';
+import { saveImage, deleteImage } from '../upload.js';
 
 const field = (formData, name) => {
   const v = formData.get(name);
@@ -52,4 +53,36 @@ export async function changePasswordAction(prevState, formData) {
     await tx.query('auth/delete-other-sessions', [user.id, currentToken]);
   });
   return { errors: {}, values: {}, message: 'Password diperbarui', savedAt: Date.now() };
+}
+
+// Ganti nama file di database; file lama baru dihapus setelah UPDATE berhasil.
+async function replaceAvatar(userId, newName) {
+  const { rows } = await query('users/update-avatar', [userId, newName]);
+  if (!rows[0]) return false;
+  if (rows[0].old_avatar) await deleteImage(rows[0].old_avatar);
+  revalidatePath('/', 'layout');
+  return true;
+}
+
+export async function updateAvatarAction(prevState, formData) {
+  const user = await requireRole('buyer');
+  const file = formData.get('avatar');
+  const errors = validateAvatar(file && typeof file === 'object' ? file : null);
+  if (hasErrors(errors)) return { errors };
+
+  const newName = await saveImage(file);
+  let saved = false;
+  try {
+    saved = await replaceAvatar(user.id, newName);
+  } finally {
+    if (!saved) await deleteImage(newName);
+  }
+  if (!saved) return { errors: {}, message: 'Foto profil tidak dapat disimpan' };
+  return { errors: {}, savedAt: Date.now() };
+}
+
+export async function removeAvatarAction() {
+  const user = await requireRole('buyer');
+  if (!(await replaceAvatar(user.id, null))) return { message: 'Foto profil tidak dapat dihapus' };
+  return {};
 }

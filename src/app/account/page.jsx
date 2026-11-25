@@ -11,7 +11,7 @@ export default async function AccountHome() {
   return (
     <>
       <h1 className="sr-only">Profil</h1>
-      <ProfileSettings user={{ name: user.name, email: user.email, phone: user.phone, joined: formatDate(user.createdAt) }} />
+      <ProfileSettings user={{ name: user.name, avatar: user.avatar, email: user.email, phone: user.phone, joined: formatDate(user.createdAt) }} />
     </>
   );
 }

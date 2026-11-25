@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { formatRupiah, formatOrderNumber, formatDate, imageUrl } from '../src/lib/format.js';
+import { formatRupiah, formatOrderNumber, formatDate, imageUrl, initials } from '../src/lib/format.js';
 
 test('format', () => {
   assert.equal(formatRupiah(4250000), 'Rp4.250.000');
@@ -15,4 +15,12 @@ test('imageUrl', () => {
   assert.equal(imageUrl('seed/1-1.webp'), '/api/images/seed/1-1.webp');
   assert.equal(imageUrl(null), null);
   assert.equal(imageUrl(''), null);
+});
+
+test('initials', () => {
+  assert.equal(initials('Dewi Lestari'), 'DL');
+  assert.equal(initials('  rizky  '), 'R');
+  assert.equal(initials('Andi Muhammad Arif'), 'AA');
+  assert.equal(initials(''), '?');
+  assert.equal(initials(null), '?');
 });

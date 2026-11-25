@@ -5,7 +5,7 @@ import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { showToast } from "@/lib/toast-client";
 
-export default function ConfirmActionButton({ action, title, message, confirmLabel = "Ya", successToast, variant = "danger", size = "sm", disabled = false, children }) {
+export default function ConfirmActionButton({ action, title, message, confirmLabel = "Ya", successToast, variant = "danger", size = "sm", disabled = false, triggerVariant = variant, className = "", children }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
@@ -23,7 +23,7 @@ export default function ConfirmActionButton({ action, title, message, confirmLab
 
   return (
     <>
-      <Button variant={variant} size={size} disabled={disabled} onClick={() => { setError(""); setOpen(true); }}>{children}</Button>
+      <Button variant={triggerVariant} size={size} className={className} disabled={disabled} onClick={() => { setError(""); setOpen(true); }}>{children}</Button>
       <Modal open={open} onClose={() => !pending && setOpen(false)} title={title}>
         <p className="text-sm text-slate-600">{message}</p>
         {error ? <p role="alert" className="mt-3 text-sm text-red-600">{error}</p> : null}

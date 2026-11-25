@@ -40,7 +40,7 @@ export default function Navbar({ user, cartCount = 0 }) {
               <Button as={Link} href="/register" size="md">Daftar</Button>
             </div>
           ) : (
-            <UserMenu name={user.name} email={user.email} />
+            <UserMenu name={user.name} email={user.email} avatar={user.avatar} />
           )}
         </div>
       </div>

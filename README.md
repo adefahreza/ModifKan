@@ -15,7 +15,7 @@ Tugas akhir mata kuliah Pemrograman Web.
 - Checkout: satu pesanan untuk setiap toko, stok berkurang dalam satu transaksi.
 - Riwayat dan detail pesanan, batalkan pesanan, konfirmasi pesanan diterima.
 - Rating dan ulasan untuk pesanan yang sudah selesai.
-- Ubah profil dan password.
+- Ubah profil, foto profil, dan password.
 
 **Penjual**
 - Status toko Pending, Approved, atau Rejected. Akun Rejected bisa dihapus lalu daftar ulang.

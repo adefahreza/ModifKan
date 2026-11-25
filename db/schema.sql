@@ -6,6 +6,7 @@ CREATE TABLE users (
   name          VARCHAR(100) NOT NULL,
   email         VARCHAR(255) NOT NULL UNIQUE,
   phone         VARCHAR(20)  NOT NULL,
+  avatar        TEXT,
   password_hash TEXT         NOT NULL,
   role          TEXT         NOT NULL CHECK (role IN ('admin','seller','buyer')),
   created_at    TIMESTAMPTZ  NOT NULL DEFAULT now(),

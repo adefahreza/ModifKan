@@ -5,6 +5,8 @@ export const TOASTS = {
   'pesanan-dibuat': 'Pesanan berhasil dibuat',
   'status-diperbarui': 'Status pesanan diperbarui',
   'profil-disimpan': 'Profil disimpan',
+  'foto-profil-disimpan': 'Foto profil disimpan',
+  'foto-profil-dihapus': 'Foto profil dihapus',
   'alamat-disimpan': 'Alamat disimpan',
   'alamat-dihapus': 'Alamat dihapus',
   'pengguna-disimpan': 'Pengguna disimpan',
