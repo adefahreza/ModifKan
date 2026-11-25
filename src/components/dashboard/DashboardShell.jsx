@@ -4,13 +4,13 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BadgeCheck, ClipboardList, LayoutDashboard, LogOut, Menu, Package, Store, Tags, Users, X,
+  BadgeCheck, ClipboardList, LayoutDashboard, LogOut, Menu, Package, Store, Tags, UserCog, Users, X,
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import Logo from "@/components/Logo";
 import FlashToast from "@/components/ui/FlashToast";
 
-const ICONS = { LayoutDashboard, Store, Package, ClipboardList, BadgeCheck, Users, Tags };
+const ICONS = { LayoutDashboard, Store, Package, ClipboardList, BadgeCheck, Users, Tags, UserCog };
 
 function Sidebar({ title, items, user, pathname, onNavigate }) {
   return (

@@ -12,8 +12,8 @@ const field = (formData, name) => {
   return typeof v === 'string' ? v : '';
 };
 
-export async function updateProfileAction(prevState, formData) {
-  const user = await requireRole('buyer');
+// Dipakai buyer (users/update) dan admin (users/update-own); peran dicek di action pemanggil.
+async function saveProfile(user, formData, queryName) {
   const { values, errors } = validateUserEdit({
     name: field(formData, 'name'),
     email: field(formData, 'email'),
@@ -22,7 +22,7 @@ export async function updateProfileAction(prevState, formData) {
   if (hasErrors(errors)) return { errors, values };
 
   try {
-    await query('users/update', [user.id, values.name, values.email, values.phone]);
+    await query(queryName, [user.id, values.name, values.email, values.phone]);
   } catch (err) {
     if (err.code === '23505') return { errors: { email: 'Email sudah terdaftar' }, values };
     throw err;
@@ -31,9 +31,18 @@ export async function updateProfileAction(prevState, formData) {
   return { errors: {}, values, message: 'Profil disimpan', savedAt: Date.now() };
 }
 
-// Password tidak pernah dikembalikan ke klien lewat values.
-export async function changePasswordAction(prevState, formData) {
+export async function updateProfileAction(prevState, formData) {
   const user = await requireRole('buyer');
+  return saveProfile(user, formData, 'users/update');
+}
+
+export async function updateAdminProfileAction(prevState, formData) {
+  const user = await requireRole('admin');
+  return saveProfile(user, formData, 'users/update-own');
+}
+
+// Password tidak pernah dikembalikan ke klien lewat values.
+async function changePassword(user, formData) {
   const { values, errors } = validatePasswordChange({
     oldPassword: field(formData, 'oldPassword'),
     newPassword: field(formData, 'newPassword'),
@@ -53,6 +62,16 @@ export async function changePasswordAction(prevState, formData) {
     await tx.query('auth/delete-other-sessions', [user.id, currentToken]);
   });
   return { errors: {}, values: {}, message: 'Password diperbarui', savedAt: Date.now() };
+}
+
+export async function changePasswordAction(prevState, formData) {
+  const user = await requireRole('buyer');
+  return changePassword(user, formData);
+}
+
+export async function changeAdminPasswordAction(prevState, formData) {
+  const user = await requireRole('admin');
+  return changePassword(user, formData);
 }
 
 // Ganti nama file di database; file lama baru dihapus setelah UPDATE berhasil.

@@ -8,8 +8,8 @@ import Button from "@/components/ui/Button";
 import { showToast } from "@/lib/toast-client";
 
 // Tampil di kolom kanan menggantikan biodata. Isian tetap ada saat validasi gagal; password tidak dikirim balik dari server.
-export default function PasswordForm({ onDone }) {
-  const [state, formAction, pending] = useActionState(changePasswordAction, { errors: {}, values: {} });
+export default function PasswordForm({ onDone, action = changePasswordAction }) {
+  const [state, formAction, pending] = useActionState(action, { errors: {}, values: {} });
   useEffect(() => {
     if (!state.savedAt) return;
     showToast("password-diubah");

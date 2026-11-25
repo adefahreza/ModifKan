@@ -1,7 +1,7 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useId } from "react";
-import { Pencil } from "lucide-react";
+import { Info, Pencil } from "lucide-react";
 import { updateProfileAction } from "@/lib/actions/profile";
 import Button from "@/components/ui/Button";
 import { showToast } from "@/lib/toast-client";
@@ -32,8 +32,8 @@ function Row({ label, name, type = "text", value, editing, error, autoComplete, 
 
 // Mode lihat menampilkan data; tombol Edit di pojok kanan bawah mengubah baris jadi kotak isian.
 // Komponen dipasang ulang (key) tiap masuk mode edit, jadi error lama tidak terbawa.
-export default function ProfileForm({ user, editing, onEdit, onDone }) {
-  const [state, formAction, pending] = useActionState(updateProfileAction, {
+export default function ProfileForm({ user, editing, onEdit, onDone, action = updateProfileAction, note }) {
+  const [state, formAction, pending] = useActionState(action, {
     errors: {}, values: { name: user.name, email: user.email, phone: user.phone },
   });
   useEffect(() => {
@@ -62,6 +62,7 @@ export default function ProfileForm({ user, editing, onEdit, onDone }) {
         <Row label="Email" name="email" type="email" value={v.email} editing={editing} error={state.errors.email} autoComplete="email" />
         <Row label="Nomor HP" name="phone" type="tel" value={v.phone} editing={editing} error={state.errors.phone} autoComplete="tel" />
       </div>
+      {note ? <p className="mt-4 flex items-start gap-2 rounded-lg bg-orange-50 px-3 py-2 text-sm text-orange-900 ring-1 ring-orange-200"><Info size={16} aria-hidden="true" className="mt-0.5 shrink-0" /> {note}</p> : null}
       <div className="mt-auto flex justify-end gap-2 pt-6">
         {editing ? (
           <>

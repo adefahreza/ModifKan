@@ -9,6 +9,7 @@ const ITEMS = [
   { href: "/admin/categories", label: "Kategori", icon: "Tags" },
   { href: "/admin/products", label: "Moderasi Produk", icon: "Package" },
   { href: "/admin/orders", label: "Pesanan", icon: "ClipboardList" },
+  { href: "/admin/profile", label: "Profil Saya", icon: "UserCog" },
 ];
 
 export default async function AdminLayout({ children }) {
