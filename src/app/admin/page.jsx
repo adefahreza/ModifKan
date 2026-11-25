@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BadgeCheck, ClipboardList, Package, PackageOpen, ShoppingBag, UserCheck, UserX } from "lucide-react";
+import { BadgeCheck, ClipboardList, Package, PackageOpen, PauseCircle, ShoppingBag, UserCheck, UserX } from "lucide-react";
 import { query } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import StatCard from "@/components/dashboard/StatCard";
@@ -35,6 +35,7 @@ export default async function AdminHome() {
         <StatCard label="Seller pending" value={s.sellers_pending} icon={BadgeCheck} href="/admin/sellers" />
         <StatCard label="Seller approved" value={s.sellers_approved} icon={UserCheck} />
         <StatCard label="Seller rejected" value={s.sellers_rejected} icon={UserX} />
+        <StatCard label="Seller ditangguhkan" value={s.sellers_suspended} icon={PauseCircle} href="/admin/sellers?status=suspended" />
         <StatCard label="Produk" value={s.products} icon={Package} />
         <StatCard label="Pesanan" value={s.orders} icon={ClipboardList} />
       </div>

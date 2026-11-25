@@ -51,7 +51,12 @@ export default function RegisterForm({ initialRole = "buyer" }) {
       <Field label="Email" name="email" type="email" autoComplete="email" defaultValue={v.email} error={e.email} />
       <Field label="Nomor HP" name="phone" type="tel" autoComplete="tel" defaultValue={v.phone} error={e.phone} hint="Contoh: 081234567890" />
       {role === "seller" ? (
-        <Field label="Nama toko" name="storeName" defaultValue={v.storeName} error={e.storeName} />
+        <>
+          <Field label="Nama toko" name="storeName" defaultValue={v.storeName} error={e.storeName} />
+          <Field label="Foto KTP / tanda pengenal" name="ktp" type="file" accept="image/jpeg,image/png,image/webp" error={e.ktp}
+            hint="JPG, PNG, atau WEBP, maksimal 2 MB. Hanya dilihat admin untuk verifikasi."
+            className="[&_input]:py-2 [&_input]:text-sm [&_input]:file:mr-3 [&_input]:file:rounded-md [&_input]:file:border-0 [&_input]:file:bg-slate-900 [&_input]:file:px-3 [&_input]:file:py-1.5 [&_input]:file:text-sm [&_input]:file:font-semibold [&_input]:file:text-white" />
+        </>
       ) : null}
       <Field label="Password" name="password" type="password" autoComplete="new-password" error={e.password} hint="Minimal 8 karakter" />
       <Field label="Konfirmasi password" name="confirmPassword" type="password" autoComplete="new-password" error={e.confirmPassword} />

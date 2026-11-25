@@ -32,3 +32,10 @@ export function initials(name) {
   const parts = String(name ?? '').trim().split(/\s+/).filter(Boolean);
   return ((parts[0]?.[0] ?? '') + (parts.length > 1 ? parts.at(-1)[0] : '')).toUpperCase() || '?';
 }
+
+// Tautan WhatsApp dari nomor HP Indonesia: 08xx / 62xx / +62xx -> https://wa.me/628xx. Selain itu null.
+export function waLink(phone) {
+  const digits = String(phone ?? '').replace(/\D/g, '');
+  const intl = digits.startsWith('0') ? `62${digits.slice(1)}` : digits;
+  return /^628\d{7,12}$/.test(intl) ? `https://wa.me/${intl}` : null;
+}

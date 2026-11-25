@@ -5,6 +5,7 @@ const TONES = {
   emerald: "bg-emerald-100 text-emerald-800",
   slate: "bg-slate-200 text-slate-700",
   red: "bg-red-100 text-red-800",
+  orange: "bg-orange-100 text-orange-800",
 };
 
 export default function Badge({ tone = "slate", className = "", children }) {

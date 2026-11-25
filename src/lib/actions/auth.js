@@ -5,10 +5,15 @@ import { query, withTransaction } from '../db.js';
 import { validateRegister, validateLogin, hasErrors } from '../validators.js';
 import { hashPassword, verifyPassword, createSession, destroySession, requireRole } from '../auth.js';
 import { homePathFor, safeNext } from '../auth-rules.js';
+import { saveImage, deleteImage } from '../upload.js';
 
 const field = (formData, name) => {
   const v = formData.get(name);
   return typeof v === 'string' ? v : '';
+};
+const fileField = (formData, name) => {
+  const v = formData.get(name);
+  return v && typeof v === 'object' ? v : null;
 };
 
 export async function registerAction(prevState, formData) {
@@ -20,19 +25,23 @@ export async function registerAction(prevState, formData) {
     password: field(formData, 'password'),
     confirmPassword: field(formData, 'confirmPassword'),
     storeName: field(formData, 'storeName'),
+    ktp: fileField(formData, 'ktp'),
   });
   const { password, confirmPassword, ...safeValues } = values;
   if (hasErrors(errors)) return { errors, values: { ...safeValues, storeName: safeValues.storeName ?? '' } };
 
   const passwordHash = await hashPassword(password);
+  // KTP disimpan setelah validasi lolos; kalau pendaftaran gagal, file dihapus lagi.
+  const ktpName = values.role === 'seller' ? await saveImage(formData.get('ktp'), { dir: 'ktp' }) : null;
   let userId;
   try {
     userId = await withTransaction(async (tx) => {
       const { rows } = await tx.query('auth/create-user', [values.name, values.email, values.phone, passwordHash, values.role]);
-      if (values.role === 'seller') await tx.query('auth/create-store', [rows[0].id, values.storeName]);
+      if (values.role === 'seller') await tx.query('auth/create-store', [rows[0].id, values.storeName, ktpName]);
       return rows[0].id;
     });
   } catch (err) {
+    if (ktpName) await deleteImage(ktpName);
     if (err.code === '23505') {
       return { errors: { email: 'Email sudah terdaftar' }, values: { ...safeValues, storeName: safeValues.storeName ?? '' } };
     }
@@ -67,6 +76,7 @@ export async function deleteRejectedAccountAction() {
   const user = await requireRole('seller');
   const { rowCount } = await query('auth/delete-rejected-seller', [user.id]);
   if (rowCount === 0) return { message: 'Akun tidak dapat dihapus' };
+  await deleteImage(user.storeKtp);
   await destroySession();
   redirect('/?toast=akun-dihapus');
 }

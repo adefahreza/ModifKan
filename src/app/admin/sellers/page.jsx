@@ -5,12 +5,16 @@ import { formatDate } from "@/lib/format";
 import Badge from "@/components/ui/Badge";
 import FilterChips from "@/components/dashboard/FilterChips";
 import SellerActions from "@/components/dashboard/SellerActions";
+import KtpPreview from "@/components/dashboard/KtpPreview";
 
 export const metadata = { title: "Verifikasi Seller — ModifKan" };
 
-const STATUSES = ["pending", "approved", "rejected"];
-const LABEL = { pending: "Pending", approved: "Approved", rejected: "Rejected" };
-const TONE = { pending: "amber", approved: "emerald", rejected: "red" };
+const STATUSES = ["pending", "approved", "suspended", "rejected"];
+const LABEL = { pending: "Pending", approved: "Approved", suspended: "Ditangguhkan", rejected: "Rejected" };
+const TONE = { pending: "amber", approved: "emerald", suspended: "orange", rejected: "red" };
+// Tanggal yang relevan per tab: daftar (pending/approved) atau terakhir berubah status (ditangguhkan/ditolak).
+const DATE_LABEL = { pending: "Daftar", approved: "Daftar", suspended: "Ditangguhkan", rejected: "Ditolak" };
+const dateOf = (r) => (r.status === "suspended" || r.status === "rejected" ? r.updated_at : r.created_at);
 
 export default async function SellersPage({ searchParams }) {
   const sp = await searchParams;
@@ -19,8 +23,19 @@ export default async function SellersPage({ searchParams }) {
     query("stores/list-by-status", [status]),
     query("admin/stats"),
   ]);
-  const counts = { pending: stats[0].sellers_pending, approved: stats[0].sellers_approved, rejected: stats[0].sellers_rejected };
+  const s = stats[0];
+  const counts = { pending: s.sellers_pending, approved: s.sellers_approved, suspended: s.sellers_suspended, rejected: s.sellers_rejected };
   const options = STATUSES.map((v) => ({ value: v, label: LABEL[v], count: counts[v] }));
+  const showReason = status === "suspended" || status === "rejected";
+  const showActions = status !== "rejected";
+
+  const ktp = (r) => (
+    <KtpPreview ktp={r.ktp_image} storeName={r.name} ownerName={r.owner_name} phone={r.phone}>
+      {r.status === "pending" ? <SellerActions storeId={r.id} storeName={r.name} status={r.status} /> : null}
+    </KtpPreview>
+  );
+  const actions = (r) => <SellerActions storeId={r.id} storeName={r.name} status={r.status} />;
+  const headers = ["Toko", "Pemilik", "Kontak", DATE_LABEL[status], "KTP", ...(showReason ? ["Alasan"] : []), "Status", ...(showActions ? [""] : [])];
 
   return (
     <>
@@ -35,19 +50,20 @@ export default async function SellersPage({ searchParams }) {
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-100 text-xs uppercase tracking-wide text-slate-600">
                 <tr>
-                  {["Toko", "Pemilik", "Email", "HP", "Daftar", "Status", ""].map((h) => <th key={h} scope="col" className="px-4 py-3">{h}</th>)}
+                  {headers.map((h, i) => <th key={`${h}-${i}`} scope="col" className="px-4 py-3">{h}</th>)}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
                 {rows.map((r) => (
-                  <tr key={r.id}>
+                  <tr key={r.id} className="align-top">
                     <td className="px-4 py-3 font-semibold">{r.name}</td>
                     <td className="px-4 py-3">{r.owner_name}</td>
-                    <td className="px-4 py-3">{r.email}</td>
-                    <td className="px-4 py-3">{r.phone}</td>
-                    <td className="px-4 py-3 whitespace-nowrap">{formatDate(r.created_at)}</td>
+                    <td className="px-4 py-3"><span className="break-all">{r.email}</span><br /><span className="text-slate-500">{r.phone}</span></td>
+                    <td className="px-4 py-3 whitespace-nowrap">{formatDate(dateOf(r))}</td>
+                    <td className="px-4 py-3">{ktp(r)}</td>
+                    {showReason ? <td className="max-w-xs px-4 py-3 text-slate-600">{r.status_reason ?? "—"}</td> : null}
                     <td className="px-4 py-3"><Badge tone={TONE[r.status]}>{LABEL[r.status]}</Badge></td>
-                    <td className="px-4 py-3">{r.status === "pending" ? <SellerActions storeId={r.id} /> : null}</td>
+                    {showActions ? <td className="px-4 py-3">{actions(r)}</td> : null}
                   </tr>
                 ))}
               </tbody>
@@ -61,9 +77,13 @@ export default async function SellersPage({ searchParams }) {
                   <p className="font-semibold">{r.name}</p>
                   <Badge tone={TONE[r.status]}>{LABEL[r.status]}</Badge>
                 </div>
-                <p className="mt-1 text-sm text-slate-600">{r.owner_name} · {r.email}</p>
-                <p className="text-sm text-slate-600">{r.phone} · {formatDate(r.created_at)}</p>
-                {r.status === "pending" ? <div className="mt-3"><SellerActions storeId={r.id} /></div> : null}
+                <p className="mt-1 break-all text-sm text-slate-600">{r.owner_name} · {r.email}</p>
+                <p className="text-sm text-slate-600">{r.phone} · {DATE_LABEL[status]} {formatDate(dateOf(r))}</p>
+                {showReason && r.status_reason ? <p className="mt-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">Alasan: {r.status_reason}</p> : null}
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                  {ktp(r)}
+                  {showActions ? actions(r) : null}
+                </div>
               </li>
             ))}
           </ul>

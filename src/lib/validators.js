@@ -74,6 +74,7 @@ export function validateRegister(input) {
     confirmPassword: str(input.confirmPassword),
     storeName: role === 'seller' ? str(input.storeName).trim() : null,
   };
+  // File KTP tidak dimasukkan ke values (values dikirim balik ke klien).
   const errors = {};
   const set = (field, msg) => { if (msg) errors[field] = msg; };
 
@@ -89,6 +90,7 @@ export function validateRegister(input) {
   if (values.confirmPassword !== values.password) errors.confirmPassword = 'Konfirmasi password tidak sama';
   if (role === 'seller') {
     set('storeName', first(required(values.storeName, 'Nama toko'), maxLength(values.storeName, 100, 'Nama toko')));
+    set('ktp', input.ktp && input.ktp.size ? isImageFile(input.ktp) : 'Foto KTP wajib diunggah');
   }
   return { values, errors };
 }
@@ -110,6 +112,14 @@ export function validateCategory(input) {
   return { values, errors };
 }
 
+// Email dan nomor HP: dipakai profil (buyer/admin) dan kontak pemilik toko.
+function validateContact(input, values, set) {
+  values.email = normalizeEmail(input.email);
+  values.phone = str(input.phone).replace(/[\s-]/g, '');
+  set('email', first(required(values.email, 'Email'), isEmail(values.email), maxLength(values.email, 255, 'Email')));
+  set('phone', first(required(values.phone, 'Nomor HP'), isPhone(values.phone)));
+}
+
 export function validateStore(input) {
   const description = str(input.description).trim();
   const values = { name: str(input.name).trim(), description: description === '' ? null : description };
@@ -117,6 +127,16 @@ export function validateStore(input) {
   const set = (field, msg) => { if (msg) errors[field] = msg; };
   set('name', first(required(values.name, 'Nama toko'), maxLength(values.name, 100, 'Nama toko')));
   set('image', isImageFile(input.image));
+  validateContact(input, values, set);
+  return { values, errors };
+}
+
+// Alasan penolakan/penangguhan seller oleh admin.
+export function validateReason(input) {
+  const values = { reason: str(input.reason).trim() };
+  const errors = {};
+  const msg = first(required(values.reason, 'Alasan'), minLength(values.reason, 10, 'Alasan'), maxLength(values.reason, 500, 'Alasan'));
+  if (msg) errors.reason = msg;
   return { values, errors };
 }
 
@@ -148,16 +168,11 @@ export function validateProduct(input, { isEdit = false } = {}) {
 }
 
 export function validateUserEdit(input) {
-  const values = {
-    name: str(input.name).trim(),
-    email: normalizeEmail(input.email),
-    phone: str(input.phone).replace(/[\s-]/g, ''),
-  };
+  const values = { name: str(input.name).trim() };
   const errors = {};
   const set = (field, msg) => { if (msg) errors[field] = msg; };
   set('name', first(required(values.name, 'Nama'), maxLength(values.name, 100, 'Nama')));
-  set('email', first(required(values.email, 'Email'), isEmail(values.email), maxLength(values.email, 255, 'Email')));
-  set('phone', first(required(values.phone, 'Nomor HP'), isPhone(values.phone)));
+  validateContact(input, values, set);
   return { values, errors };
 }
 

@@ -23,6 +23,8 @@ export const TOASTS = {
   'kategori-disimpan': 'Kategori disimpan',
   'seller-disetujui': 'Seller disetujui',
   'seller-ditolak': 'Seller ditolak',
+  'seller-ditangguhkan': 'Seller ditangguhkan',
+  'seller-diaktifkan': 'Seller diaktifkan kembali',
   'akun-dihapus': 'Akun Anda telah dihapus',
 };
 
