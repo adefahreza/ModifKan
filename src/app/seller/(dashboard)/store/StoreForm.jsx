@@ -8,7 +8,8 @@ import ImageInput from "@/components/dashboard/ImageInput";
 import Button from "@/components/ui/Button";
 
 // Satu kartu: header (banner toko dari server), kolom gambar + kolom info, lalu footer tombol.
-export default function StoreForm({ store, owner, imageUrl, header }) {
+// `passwordButton`: tombol Ganti Password dari StoreSettings, di bawah kolom gambar.
+export default function StoreForm({ store, owner, imageUrl, header, passwordButton }) {
   const [state, formAction, pending] = useActionState(updateStoreAction, {
     errors: {}, values: { name: store.name, description: store.description ?? "", email: owner.email, phone: owner.phone },
   });
@@ -22,9 +23,10 @@ export default function StoreForm({ store, owner, imageUrl, header }) {
       {header}
       {state.message ? <p role="alert" className="mx-5 mt-5 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.message}</p> : null}
       <div className="grid divide-y divide-slate-200 md:grid-cols-[17rem_minmax(0,1fr)] md:divide-x md:divide-y-0">
-        <section aria-labelledby="store-image-title" className="p-5 sm:p-6">
+        <section aria-labelledby="store-image-title" className="flex flex-col p-5 sm:p-6">
           <h2 id="store-image-title" className="mb-3 font-display text-xl font-bold uppercase">Gambar toko</h2>
           <ImageInput label="File gambar" currentUrl={imageUrl} error={state.errors.image} />
+          {passwordButton ? <div className="mt-auto pt-6">{passwordButton}</div> : null}
         </section>
         <section aria-labelledby="store-info-title" className="space-y-4 p-5 sm:p-6">
           <div>

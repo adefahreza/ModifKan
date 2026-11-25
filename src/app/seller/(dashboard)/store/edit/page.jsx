@@ -6,7 +6,7 @@ import { requireApprovedSeller } from "@/lib/auth";
 import { formatDate, imageUrl } from "@/lib/format";
 import Badge from "@/components/ui/Badge";
 import ProductImage from "@/components/shop/ProductImage";
-import StoreForm from "../StoreForm";
+import StoreSettings from "../StoreSettings";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +51,7 @@ export default async function EditStorePage() {
         <Link href="/seller/store" className="hover:text-slate-900">Toko Saya</Link> / <span aria-current="page" className="text-slate-900">Edit</span>
       </nav>
       <h1 className="mt-1 font-display text-3xl font-bold uppercase">Edit Toko</h1>
-      <StoreForm store={store} owner={{ email: user.email, phone: user.phone }} imageUrl={imageUrl(store.image)} header={banner} />
+      <StoreSettings store={store} owner={{ email: user.email, phone: user.phone }} imageUrl={imageUrl(store.image)} header={banner} />
     </>
   );
 }

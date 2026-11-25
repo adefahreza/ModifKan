@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { query, withTransaction } from '../db.js';
-import { SESSION_COOKIE, hashPassword, requireRole, verifyPassword } from '../auth.js';
+import { SESSION_COOKIE, hashPassword, requireRole, requireApprovedSeller, verifyPassword } from '../auth.js';
 import { validateAvatar, validatePasswordChange, validateUserEdit, imageContentError, hasErrors } from '../validators.js';
 import { saveImage, deleteImage } from '../upload.js';
 
@@ -71,6 +71,11 @@ export async function changePasswordAction(prevState, formData) {
 
 export async function changeAdminPasswordAction(prevState, formData) {
   const user = await requireRole('admin');
+  return changePassword(user, formData);
+}
+
+export async function changeSellerPasswordAction(prevState, formData) {
+  const user = await requireApprovedSeller();
   return changePassword(user, formData);
 }
 
