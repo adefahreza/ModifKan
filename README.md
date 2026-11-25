@@ -1,4 +1,6 @@
-# ModifKan
+<p align="center">
+  <img src="public/logo-modifkan.png" alt="ModifKan" width="360">
+</p>
 
 Marketplace multi-toko untuk sparepart dan part modifikasi mobil. Penjual mendaftar, ditinjau Admin, lalu berjualan. Pembeli bisa memasukkan produk dari banyak toko ke satu keranjang, checkout, memantau status pesanan, dan memberi ulasan setelah pesanan selesai.
 
@@ -18,12 +20,17 @@ Tugas akhir mata kuliah Pemrograman Web.
 - Ubah profil, foto profil, dan password.
 
 **Penjual**
-- Status toko Pending, Approved, atau Rejected. Akun Rejected bisa dihapus lalu daftar ulang.
+- Daftar dengan nama toko dan foto KTP/tanda pengenal untuk verifikasi.
+- Status toko Pending, Approved, Rejected, atau Ditangguhkan. Penjual Rejected melihat alasan penolakan, dan akunnya bisa dihapus lalu daftar ulang.
+- Penjual yang ditangguhkan melihat alasan dan nomor Customer Service (WhatsApp).
 - Dashboard ringkasan, pengaturan toko, CRUD produk beserta unggah gambar.
+- Ubah email dan nomor HP di halaman Edit Toko.
 - Mengelola pesanan masuk: konfirmasi, kirim, atau batalkan.
 
 **Admin**
-- Verifikasi penjual.
+- Verifikasi penjual: lihat foto KTP, Approve, atau Reject dengan alasan.
+- Menangguhkan penjual dengan alasan, lalu mengaktifkannya kembali. Produknya tersembunyi selama ditangguhkan.
+- Profil admin: nama, email, nomor HP (kontak Customer Service), dan password.
 - Mengelola pengguna dan kategori.
 - Moderasi produk dan pemantauan semua pesanan.
 
@@ -128,6 +135,7 @@ npm run db:reset
 | Penjual (Approved, Kaki Kuat) | `kakikuat@modifkan.test` | `modifkan123` |
 | Penjual (Pending) | `turbolokal@modifkan.test` | `modifkan123` |
 | Penjual (Rejected) | `bengkelasal@modifkan.test` | `modifkan123` |
+| Penjual (Ditangguhkan, Rapid Motor) | `rapidmotor@modifkan.test` | `modifkan123` |
 
 ## Struktur folder
 
@@ -143,12 +151,12 @@ src/
     account/          halaman Pembeli
     seller/           dashboard Penjual dan halaman status toko
     admin/            dashboard Admin
-    api/              route handler: cart, wishlist, images
+    api/              route handler: cart, wishlist, images, ktp
     403/              halaman tanpa akses
   components/         komponen UI, toko, dashboard, pesanan, akun
   lib/                koneksi database, auth, validasi, server action
   proxy.js            cek cookie session untuk halaman privat
-public/icons/         ikon kategori
+public/               logo README dan ikon kategori
 uploads/              gambar unggahan (hanya uploads/seed/ yang disimpan di repo)
 ```
 
@@ -159,3 +167,4 @@ uploads/              gambar unggahan (hanya uploads/seed/ yang disimpan di repo
 - Setiap aksi privat memeriksa peran di server, dan kepemilikan data dicek di query.
 - Session disimpan di tabel `sessions` dan dikirim lewat cookie `httpOnly`. Password di-hash dengan bcryptjs.
 - Gambar disimpan di `uploads/` dan disajikan lewat `GET /api/images/...` (publik, hanya baca).
+- Foto KTP disimpan di `uploads/ktp/` dan hanya disajikan lewat `/api/ktp/...` untuk Admin.
