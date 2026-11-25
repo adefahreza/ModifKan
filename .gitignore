@@ -57,3 +57,10 @@ playwright-report/
 
 
 AGENTS.md
+
+# 
+/tests/
+/e2e/
+playwright.config.js
+/db/queries/testing/
+/scripts/fetch-seed-photos.sh

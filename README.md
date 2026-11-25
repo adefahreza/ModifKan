@@ -150,9 +150,6 @@ src/
   proxy.js            cek cookie session untuk halaman privat
 public/icons/         ikon kategori
 uploads/              gambar unggahan (hanya uploads/seed/ yang disimpan di repo)
-scripts/              reset database dan pengambilan foto seed
-tests/                unit test
-e2e/                  tes browser (Playwright)
 ```
 
 ## Catatan teknis
@@ -162,4 +159,3 @@ e2e/                  tes browser (Playwright)
 - Setiap aksi privat memeriksa peran di server, dan kepemilikan data dicek di query.
 - Session disimpan di tabel `sessions` dan dikirim lewat cookie `httpOnly`. Password di-hash dengan bcryptjs.
 - Gambar disimpan di `uploads/` dan disajikan lewat `GET /api/images/...` (publik, hanya baca).
-- Unit test: `npm test` (memakai database pada `.env.local`).
