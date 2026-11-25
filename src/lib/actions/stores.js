@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { query } from '../db.js';
+import { query, withTransaction } from '../db.js';
 import { requireRole, requireApprovedSeller } from '../auth.js';
 import { validateStore, validateReason, hasErrors } from '../validators.js';
 import { saveImage, deleteImage } from '../upload.js';
@@ -48,15 +48,30 @@ export async function updateStoreAction(prevState, formData) {
     name: String(formData.get('name') ?? ''),
     description: String(formData.get('description') ?? ''),
     image: image && typeof image === 'object' ? image : null,
+    email: String(formData.get('email') ?? ''),
+    phone: String(formData.get('phone') ?? ''),
   });
-  const formValues = { name: values.name, description: values.description ?? '' };
+  const formValues = { name: values.name, description: values.description ?? '', email: values.email, phone: values.phone };
   if (hasErrors(errors)) return { errors, values: formValues };
 
   const { rows: current } = await query('stores/find-by-id', [user.storeId]);
   const hasNew = image && typeof image === 'object' && image.size > 0;
   const newName = hasNew ? await saveImage(image) : null;
-  const { rowCount } = await query('stores/update', [user.storeId, values.name, values.description, newName]);
-  if (rowCount === 0) {
+  // Data toko dan kontak pemilik disimpan bersama: kalau email sudah dipakai, tidak ada yang berubah.
+  let saved;
+  try {
+    saved = await withTransaction(async (tx) => {
+      const { rowCount } = await tx.query('stores/update', [user.storeId, values.name, values.description, newName]);
+      if (rowCount === 0) return false;
+      await tx.query('users/update-contact', [user.id, values.email, values.phone]);
+      return true;
+    });
+  } catch (err) {
+    if (newName) await deleteImage(newName);
+    if (err.code === '23505') return { errors: { email: 'Email sudah terdaftar' }, values: formValues };
+    throw err;
+  }
+  if (!saved) {
     if (newName) await deleteImage(newName);
     return { errors: {}, values: formValues, message: 'Toko tidak ditemukan' };
   }

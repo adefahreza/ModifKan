@@ -8,9 +8,9 @@ import ImageInput from "@/components/dashboard/ImageInput";
 import Button from "@/components/ui/Button";
 
 // Satu kartu: header (banner toko dari server), kolom gambar + kolom info, lalu footer tombol.
-export default function StoreForm({ store, imageUrl, header }) {
+export default function StoreForm({ store, owner, imageUrl, header }) {
   const [state, formAction, pending] = useActionState(updateStoreAction, {
-    errors: {}, values: { name: store.name, description: store.description ?? "" },
+    errors: {}, values: { name: store.name, description: store.description ?? "", email: owner.email, phone: owner.phone },
   });
   function onSubmit(e) {
     e.preventDefault();
@@ -36,6 +36,14 @@ export default function StoreForm({ store, imageUrl, header }) {
             <label htmlFor="store-desc" className="mb-1 block text-sm font-medium text-slate-700">Deskripsi (opsional)</label>
             <textarea id="store-desc" name="description" rows={6} defaultValue={state.values.description}
               className="block w-full rounded-lg bg-white px-3 py-2 text-base ring-1 ring-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500" />
+          </div>
+          <div className="border-t border-slate-200 pt-4">
+            <h3 className="font-semibold text-slate-900">Kontak pemilik</h3>
+            <p className="text-sm text-slate-500">Email dipakai untuk masuk ke akun.</p>
+            <div className="mt-3 grid gap-4 sm:grid-cols-2">
+              <Field label="Email" name="email" type="email" autoComplete="email" defaultValue={state.values.email} error={state.errors.email} />
+              <Field label="No. HP" name="phone" type="tel" autoComplete="tel" defaultValue={state.values.phone} error={state.errors.phone} />
+            </div>
           </div>
         </section>
       </div>

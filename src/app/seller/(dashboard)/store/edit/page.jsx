@@ -51,7 +51,7 @@ export default async function EditStorePage() {
         <Link href="/seller/store" className="hover:text-slate-900">Toko Saya</Link> / <span aria-current="page" className="text-slate-900">Edit</span>
       </nav>
       <h1 className="mt-1 font-display text-3xl font-bold uppercase">Edit Toko</h1>
-      <StoreForm store={store} imageUrl={imageUrl(store.image)} header={banner} />
+      <StoreForm store={store} owner={{ email: user.email, phone: user.phone }} imageUrl={imageUrl(store.image)} header={banner} />
     </>
   );
 }
