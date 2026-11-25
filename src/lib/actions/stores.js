@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { query, withTransaction } from '../db.js';
 import { requireRole, requireApprovedSeller } from '../auth.js';
-import { validateStore, validateReason, hasErrors } from '../validators.js';
+import { validateStore, validateReason, imageContentError, hasErrors } from '../validators.js';
 import { saveImage, deleteImage } from '../upload.js';
 
 // Transisi status toko; 0 baris berarti status asal sudah berubah (dijaga di SQL).
@@ -52,6 +52,10 @@ export async function updateStoreAction(prevState, formData) {
     phone: String(formData.get('phone') ?? ''),
   });
   const formValues = { name: values.name, description: values.description ?? '', email: values.email, phone: values.phone };
+  if (!errors.image) {
+    const contentError = await imageContentError(image && typeof image === 'object' ? image : null);
+    if (contentError) errors.image = contentError;
+  }
   if (hasErrors(errors)) return { errors, values: formValues };
 
   const { rows: current } = await query('stores/find-by-id', [user.storeId]);

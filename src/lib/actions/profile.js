@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { query, withTransaction } from '../db.js';
 import { SESSION_COOKIE, hashPassword, requireRole, verifyPassword } from '../auth.js';
-import { validateAvatar, validatePasswordChange, validateUserEdit, hasErrors } from '../validators.js';
+import { validateAvatar, validatePasswordChange, validateUserEdit, imageContentError, hasErrors } from '../validators.js';
 import { saveImage, deleteImage } from '../upload.js';
 
 const field = (formData, name) => {
@@ -88,6 +88,8 @@ export async function updateAvatarAction(prevState, formData) {
   const file = formData.get('avatar');
   const errors = validateAvatar(file && typeof file === 'object' ? file : null);
   if (hasErrors(errors)) return { errors };
+  const contentError = await imageContentError(file);
+  if (contentError) return { errors: { avatar: contentError } };
 
   const newName = await saveImage(file);
   let saved = false;

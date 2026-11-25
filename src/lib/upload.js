@@ -1,6 +1,7 @@
 import { mkdir, writeFile, unlink } from 'node:fs/promises';
 import crypto from 'node:crypto';
 import path from 'node:path';
+import { imageTypeFromBytes } from './validators.js';
 
 export const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
 
@@ -30,10 +31,13 @@ export function contentTypeFor(name) {
 
 // dir 'ktp' -> uploads/ktp/<acak>.<ext>, nama yang dikembalikan "ktp/<acak>.<ext>".
 export async function saveImage(file, { dir } = {}) {
+  const data = Buffer.from(await file.arrayBuffer());
+  // Pengaman terakhir: action sudah memeriksa lewat imageContentError.
+  if (!imageTypeFromBytes(data.subarray(0, 12))) throw new Error('Isi file bukan gambar JPG, PNG, atau WEBP');
   const prefix = dir === 'ktp' ? 'ktp/' : '';
   await mkdir(path.join(UPLOAD_DIR, prefix), { recursive: true });
   const name = `${prefix}${crypto.randomBytes(16).toString('hex')}.${extFromType(file.type)}`;
-  await writeFile(path.join(UPLOAD_DIR, name), Buffer.from(await file.arrayBuffer()));
+  await writeFile(path.join(UPLOAD_DIR, name), data);
   return name;
 }
 

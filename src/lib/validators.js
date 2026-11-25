@@ -49,6 +49,23 @@ export function intInRange(value, min, max, label) {
   return null;
 }
 
+// Jenis gambar dari tanda awal file (magic bytes). Label tipe dari browser bisa dipalsukan.
+export function imageTypeFromBytes(bytes) {
+  const b = bytes ?? [];
+  const at = (i, ...xs) => xs.every((x, j) => b[i + j] === x);
+  if (at(0, 0xff, 0xd8, 0xff)) return 'image/jpeg';
+  if (at(0, 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a)) return 'image/png';
+  if (at(0, 0x52, 0x49, 0x46, 0x46) && at(8, 0x57, 0x45, 0x42, 0x50)) return 'image/webp';
+  return null;
+}
+
+// Dipanggil setelah isImageFile lolos: memastikan isinya benar-benar JPG/PNG/WEBP.
+export async function imageContentError(file) {
+  if (!file || !file.size) return null;
+  const bytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+  return imageTypeFromBytes(bytes) ? null : 'Format gambar harus JPG, PNG, atau WEBP';
+}
+
 export function isImageFile(file, { required: isRequired = false } = {}) {
   if (!file || !file.size) return isRequired ? 'Gambar wajib diunggah' : null;
   if (!IMAGE_TYPES.includes(file.type)) return 'Format gambar harus JPG, PNG, atau WEBP';

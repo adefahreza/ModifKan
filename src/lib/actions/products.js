@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { query } from '../db.js';
 import { requireApprovedSeller, requireRole } from '../auth.js';
-import { validateProduct, hasErrors } from '../validators.js';
+import { validateProduct, imageContentError, hasErrors } from '../validators.js';
 import { saveImage, deleteImage } from '../upload.js';
 
 const text = (formData, name) => {
@@ -26,11 +26,17 @@ function readProduct(formData) {
 
 const echo = (v) => ({ name: v.name, description: v.description, price: String(v.price), stock: String(v.stock), categoryId: String(v.categoryId) });
 const hasFile = (f) => f && typeof f === 'object' && f.size > 0;
+async function checkImageContent(file, errors) {
+  if (errors.image || !hasFile(file)) return;
+  const contentError = await imageContentError(file);
+  if (contentError) errors.image = contentError;
+}
 
 export async function createProductAction(prevState, formData) {
   const user = await requireApprovedSeller();
   const input = readProduct(formData);
   const { values, errors } = validateProduct(input, { isEdit: false });
+  await checkImageContent(input.image, errors);
   if (hasErrors(errors)) return { errors, values: echo(values) };
 
   const imageName = await saveImage(input.image);
@@ -50,6 +56,7 @@ export async function updateProductAction(productId, prevState, formData) {
   const id = Number(productId);
   const input = readProduct(formData);
   const { values, errors } = validateProduct(input, { isEdit: true });
+  await checkImageContent(input.image, errors);
   if (hasErrors(errors)) return { errors, values: echo(values) };
 
   const { rows: before } = await query('products/find-by-store', [id, user.storeId]);

@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { query, withTransaction } from '../db.js';
-import { validateRegister, validateLogin, hasErrors } from '../validators.js';
+import { validateRegister, validateLogin, imageContentError, hasErrors } from '../validators.js';
 import { hashPassword, verifyPassword, createSession, destroySession, requireRole } from '../auth.js';
 import { homePathFor, safeNext } from '../auth-rules.js';
 import { saveImage, deleteImage } from '../upload.js';
@@ -28,6 +28,8 @@ export async function registerAction(prevState, formData) {
     ktp: fileField(formData, 'ktp'),
   });
   const { password, confirmPassword, ...safeValues } = values;
+  const ktpError = values.role === 'seller' ? await imageContentError(fileField(formData, 'ktp')) : null;
+  if (ktpError) errors.ktp = ktpError;
   if (hasErrors(errors)) return { errors, values: { ...safeValues, storeName: safeValues.storeName ?? '' } };
 
   const passwordHash = await hashPassword(password);
