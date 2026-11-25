@@ -8,6 +8,7 @@
 --   seller  kakikuat@modifkan.test     / modifkan123  (approved)
 --   seller  turbolokal@modifkan.test   / modifkan123  (pending)
 --   seller  bengkelasal@modifkan.test  / modifkan123  (rejected)
+--   seller  rapidmotor@modifkan.test   / modifkan123  (suspended)
 
 INSERT INTO categories (name) VALUES
   ('Mesin'), ('Kaki-kaki & Rem'), ('Velg & Ban'), ('Knalpot'), ('Body Kit & Eksterior'),
@@ -22,18 +23,21 @@ INSERT INTO users (name, email, phone, password_hash, role) VALUES
   ('Dewi Speed',     'speedshop@modifkan.test',   '081200000004', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
   ('Kaki Kuat',      'kakikuat@modifkan.test',    '081200000005', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
   ('Tono Turbo',     'turbolokal@modifkan.test',  '081200000006', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
-  ('Bayu Bengkel',   'bengkelasal@modifkan.test', '081200000007', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller');
+  ('Bayu Bengkel',   'bengkelasal@modifkan.test', '081200000007', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller'),
+  ('Rapid Motor',    'rapidmotor@modifkan.test',  '081200000010', '$2b$10$KgfK42/n4yZD9yTYDDjFVe7j0JzJNxLyRWUTpOCAeE/g/fT/UzTt2', 'seller');
 
-INSERT INTO stores (user_id, name, description, image, status)
-SELECT u.id, s.store_name, s.descr, s.img, s.store_status
+-- Semua seller memakai gambar KTP contoh (bukan dokumen asli).
+INSERT INTO stores (user_id, name, description, image, status, ktp_image, status_reason)
+SELECT u.id, s.store_name, s.descr, s.img, s.store_status, 'seed/ktp-contoh.svg', s.reason
 FROM users u
 JOIN (VALUES
-  ('garasijaya@modifkan.test',  'Garasi Jaya',  'Spesialis performa mesin, knalpot, dan oli untuk mobil harian maupun proyek modifikasi. Semua barang dicek sebelum dikirim.', 'seed/10-3.webp', 'approved'),
-  ('speedshop@modifkan.test',   'Speedshop ID', 'Part tampilan dan interior bergaya racing: jok, setir, spoiler, dan lampu custom untuk mobil impianmu.',                     'seed/10-4.webp', 'approved'),
-  ('kakikuat@modifkan.test',    'Kaki Kuat',    'Kaki-kaki, rem, dan velg untuk handling yang lebih tajam. Melayani konsultasi ukuran dan PCD sebelum membeli.',               'seed/10-6.webp', 'approved'),
-  ('turbolokal@modifkan.test',  'Turbo Lokal',  NULL, NULL, 'pending'),
-  ('bengkelasal@modifkan.test', 'Bengkel Asal', NULL, NULL, 'rejected')
-) AS s(email, store_name, descr, img, store_status) ON s.email = u.email;
+  ('garasijaya@modifkan.test',  'Garasi Jaya',  'Spesialis performa mesin, knalpot, dan oli untuk mobil harian maupun proyek modifikasi. Semua barang dicek sebelum dikirim.', 'seed/10-3.webp', 'approved', NULL),
+  ('speedshop@modifkan.test',   'Speedshop ID', 'Part tampilan dan interior bergaya racing: jok, setir, spoiler, dan lampu custom untuk mobil impianmu.',                     'seed/10-4.webp', 'approved', NULL),
+  ('kakikuat@modifkan.test',    'Kaki Kuat',    'Kaki-kaki, rem, dan velg untuk handling yang lebih tajam. Melayani konsultasi ukuran dan PCD sebelum membeli.',               'seed/10-6.webp', 'approved', NULL),
+  ('turbolokal@modifkan.test',  'Turbo Lokal',  NULL, NULL, 'pending',   NULL),
+  ('bengkelasal@modifkan.test', 'Bengkel Asal', NULL, NULL, 'rejected',  'Foto KTP tidak terbaca dan nama toko tidak sesuai data pemilik.'),
+  ('rapidmotor@modifkan.test',  'Rapid Motor',  NULL, NULL, 'suspended', 'Menjual produk tiruan yang dilaporkan beberapa pembeli.')
+) AS s(email, store_name, descr, img, store_status, reason) ON s.email = u.email;
 
 -- Produk: 8 per toko (kategori dan toko dicari lewat nama)
 INSERT INTO products (store_id, category_id, name, description, price, stock, image, created_at, updated_at)

@@ -27,7 +27,9 @@ CREATE TABLE stores (
   name        VARCHAR(100) NOT NULL,
   description TEXT,
   image       TEXT,
-  status      TEXT         NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+  ktp_image     TEXT,  -- foto KTP/tanda pengenal, hanya untuk admin (uploads/ktp/)
+  status_reason TEXT,  -- alasan penolakan atau penangguhan dari admin
+  status      TEXT         NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected','suspended')),
   created_at  TIMESTAMPTZ  NOT NULL DEFAULT now(),
   updated_at  TIMESTAMPTZ  NOT NULL DEFAULT now()
 );

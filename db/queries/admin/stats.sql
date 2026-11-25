@@ -4,5 +4,6 @@ SELECT
   (SELECT count(*) FROM stores WHERE status = 'pending')::int AS sellers_pending,
   (SELECT count(*) FROM stores WHERE status = 'approved')::int AS sellers_approved,
   (SELECT count(*) FROM stores WHERE status = 'rejected')::int AS sellers_rejected,
+  (SELECT count(*) FROM stores WHERE status = 'suspended')::int AS sellers_suspended,
   (SELECT count(*) FROM products)::int AS products,
   (SELECT count(*) FROM orders)::int AS orders;

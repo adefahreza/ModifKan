@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="856" height="540" viewBox="0 0 856 540">
+  <rect width="856" height="540" rx="28" fill="#dbeafe"/>
+  <rect x="14" y="14" width="828" height="512" rx="20" fill="none" stroke="#93c5fd" stroke-width="4"/>
+  <text x="428" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#1e3a8a">KARTU TANDA PENGENAL</text>
+  <g fill="#93c5fd">
+    <rect x="60" y="130" width="420" height="22" rx="11"/>
+    <rect x="60" y="180" width="500" height="22" rx="11" fill="#bfdbfe"/>
+    <rect x="60" y="230" width="460" height="22" rx="11" fill="#bfdbfe"/>
+    <rect x="60" y="280" width="480" height="22" rx="11" fill="#bfdbfe"/>
+    <rect x="60" y="330" width="380" height="22" rx="11" fill="#bfdbfe"/>
+    <rect x="620" y="120" width="180" height="230" rx="14"/>
+  </g>
+  <circle cx="710" cy="200" r="44" fill="#1e3a8a" opacity="0.35"/>
+  <rect x="650" y="258" width="120" height="70" rx="35" fill="#1e3a8a" opacity="0.35"/>
+  <g transform="rotate(-14 428 400)">
+    <rect x="178" y="350" width="500" height="110" rx="16" fill="none" stroke="#dc2626" stroke-width="8"/>
+    <text x="428" y="420" text-anchor="middle" font-family="Arial, sans-serif" font-size="64" font-weight="800" fill="#dc2626">CONTOH KTP</text>
+  </g>
+  <text x="428" y="505" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#1e3a8a">Bukan dokumen asli · data seed ModifKan</text>
+</svg>

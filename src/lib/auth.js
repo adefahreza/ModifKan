@@ -51,6 +51,8 @@ export const getCurrentUser = cache(async () => {
     storeName: r.store_name,
     storeStatus: r.store_status,
     storeCreatedAt: r.store_created_at,
+    storeReason: r.store_reason,
+    storeKtp: r.store_ktp,
   };
 });
 
