@@ -3,7 +3,7 @@ import { query } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import FilterChips from "@/components/dashboard/FilterChips";
 import ProductGrid from "@/components/shop/ProductGrid";
-import FilterPanel, { SortSelect } from "@/components/shop/FilterPanel";
+import FilterPanel from "@/components/shop/FilterPanel";
 import { parseProductFilters } from "@/lib/product-filters";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,6 @@ export default async function ProductsPage({ searchParams }) {
 
   return (
     <FilterPanel
-      categories={categories}
       filters={filters}
       header={
         <>
