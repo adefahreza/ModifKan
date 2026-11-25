@@ -24,14 +24,15 @@ export default async function AddressesPage() {
       {rows.length === 0 ? (
         <EmptyState icon={MapPin} title="Belum ada alamat" description="Tambahkan alamat agar bisa membuat pesanan." />
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2">
+        // Satu kartu per baris, selebar kotak akun; di layar lebar tombol aksi pindah ke kanan.
+        <ul className="space-y-3">
           {rows.map((a) => (
-            <li key={a.id} className="flex flex-col gap-3 rounded-xl bg-white p-4 ring-1 ring-slate-200">
+            <li key={a.id} className="flex flex-col gap-3 rounded-xl bg-white p-4 ring-1 ring-slate-200 sm:flex-row sm:items-center sm:justify-between">
               <div className="text-sm text-slate-700">
                 <p className="font-semibold text-slate-900">{a.recipient} <span className="font-normal text-slate-600">· {a.phone}</span></p>
                 <p className="mt-1">{a.address}, {a.city} {a.postal_code}</p>
               </div>
-              <div className="mt-auto flex gap-2">
+              <div className="flex shrink-0 gap-2">
                 <Button as={Link} href={`/account/addresses/${a.id}/edit`} variant="secondary" size="sm"><Pencil size={14} aria-hidden="true" /> Edit</Button>
                 <ConfirmActionButton action={deleteAddressAction.bind(null, a.id)} title="Hapus alamat?"
                   message="Alamat ini akan dihapus. Pesanan yang sudah dibuat tidak terpengaruh." confirmLabel="Ya, hapus" successToast="alamat-dihapus">Hapus</ConfirmActionButton>

@@ -10,15 +10,16 @@ const ITEMS = [
   { href: "/account/addresses", label: "Alamat" },
 ];
 
+// Tab di bagian atas kotak akun; tab aktif bergaris bawah merah.
 export default function AccountNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Akun" className="mb-6 flex gap-2 overflow-x-auto">
+    <nav aria-label="Akun" className="flex gap-6 overflow-x-auto border-b border-slate-200 px-5 sm:px-6">
       {ITEMS.map(({ href, label }) => {
         const active = href === "/account" ? pathname === href : pathname.startsWith(href);
         return (
           <Link key={href} href={href} aria-current={active ? "page" : undefined}
-            className={`inline-flex min-h-11 items-center rounded-lg px-4 text-sm font-semibold ${active ? "bg-slate-900 text-white" : "bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100"}`}>
+            className={`-mb-px inline-flex min-h-12 shrink-0 items-center border-b-[3px] text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-red-500 ${active ? "border-red-600 text-red-600" : "border-transparent text-slate-500 hover:text-slate-900"}`}>
             {label}
           </Link>
         );
