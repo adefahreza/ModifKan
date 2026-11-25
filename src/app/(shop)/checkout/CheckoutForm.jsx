@@ -1,16 +1,23 @@
 "use client";
 
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import Link from "next/link";
 import { checkoutAction } from "@/lib/actions/orders";
-import SubmitButton from "@/components/SubmitButton";
 import Button from "@/components/ui/Button";
 
 export default function CheckoutForm({ addresses }) {
-  const [state, formAction] = useActionState(checkoutAction, { message: "" });
+  const [state, formAction, pending] = useActionState(checkoutAction, { message: "" });
   const hasAddress = addresses.length > 0;
+
+  // Kirim manual: React mereset <form action> setelah action selesai, sehingga alamat pilihan kembali ke yang pertama.
+  function onSubmit(e) {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    startTransition(() => formAction(data));
+  }
+
   return (
-    <form action={formAction} className="space-y-3">
+    <form action={formAction} onSubmit={onSubmit} className="space-y-3">
       <fieldset className="space-y-2">
         <legend className="mb-1 text-sm font-semibold text-slate-900">Alamat pengiriman</legend>
         {hasAddress ? addresses.map((a, i) => (
@@ -33,7 +40,7 @@ export default function CheckoutForm({ addresses }) {
       </fieldset>
       {state.message ? <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.message}</p> : null}
       {hasAddress
-        ? <SubmitButton pendingText="Memproses…" size="lg" className="w-full">Buat Pesanan</SubmitButton>
+        ? <Button type="submit" size="lg" className="w-full" disabled={pending}>{pending ? "Memproses…" : "Buat Pesanan"}</Button>
         : <Button type="submit" size="lg" className="w-full" disabled>Buat Pesanan</Button>}
     </form>
   );
