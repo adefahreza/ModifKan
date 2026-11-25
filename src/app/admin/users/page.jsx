@@ -3,6 +3,7 @@ import { Users } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 import { Pencil, Search } from "lucide-react";
 import { query } from "@/lib/db";
+import { requireRole } from "@/lib/auth";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import ConfirmActionButton from "@/components/ConfirmActionButton";
@@ -24,6 +25,7 @@ function Actions({ u }) {
 }
 
 export default async function UsersPage({ searchParams }) {
+  await requireRole("admin"); // wajib di halaman: layout bisa dilewati lewat request RSC
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q.trim() : "";
   const { rows } = await query("users/list", [q === "" ? null : q]);

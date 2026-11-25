@@ -1,4 +1,5 @@
 import { query } from "@/lib/db";
+import { requireRole } from "@/lib/auth";
 import { BadgeCheck } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 import { formatDate } from "@/lib/format";
@@ -17,6 +18,7 @@ const DATE_LABEL = { pending: "Daftar", approved: "Daftar", suspended: "Ditanggu
 const dateOf = (r) => (r.status === "suspended" || r.status === "rejected" ? r.updated_at : r.created_at);
 
 export default async function SellersPage({ searchParams }) {
+  await requireRole("admin"); // wajib di halaman: layout bisa dilewati lewat request RSC
   const sp = await searchParams;
   const status = STATUSES.includes(sp.status) ? sp.status : "pending";
   const [{ rows }, { rows: stats }] = await Promise.all([

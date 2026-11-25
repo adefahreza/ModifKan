@@ -1,4 +1,5 @@
 import { query } from "@/lib/db";
+import { requireRole } from "@/lib/auth";
 import { Tags } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 import { deleteCategoryAction } from "@/lib/actions/categories";
@@ -7,6 +8,7 @@ import { CategoryRow, CreateCategoryForm } from "./CategoryForm";
 export const metadata = { title: "Kategori — ModifKan" };
 
 export default async function CategoriesPage() {
+  await requireRole("admin"); // wajib di halaman: layout bisa dilewati lewat request RSC
   const { rows } = await query("categories/list");
   return (
     <>

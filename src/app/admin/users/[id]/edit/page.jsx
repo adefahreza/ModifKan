@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, Mail, Phone, Store } from "lucide-react";
 import { query } from "@/lib/db";
+import { requireRole } from "@/lib/auth";
 import { formatDate, formatRupiah } from "@/lib/format";
 import Badge from "@/components/ui/Badge";
 import UserEditForm from "./UserEditForm";
@@ -55,6 +56,7 @@ function Summary({ user, s }) {
 }
 
 export default async function EditUserPage({ params }) {
+  await requireRole("admin"); // wajib di halaman: layout bisa dilewati lewat request RSC
   const { id } = await params;
   if (!/^\d{1,9}$/.test(id)) notFound();
   const { rows } = await query("users/find-by-id", [Number(id)]);

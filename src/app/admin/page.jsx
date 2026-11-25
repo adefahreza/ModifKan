@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BadgeCheck, ClipboardList, Package, PackageOpen, PauseCircle, ShoppingBag, UserCheck, UserX } from "lucide-react";
 import { query } from "@/lib/db";
+import { requireRole } from "@/lib/auth";
 import { formatDate } from "@/lib/format";
 import StatCard from "@/components/dashboard/StatCard";
 import OrdersTable from "@/components/orders/OrdersTable";
@@ -21,6 +22,7 @@ function PanelHeader({ id, title, href, linkLabel }) {
 }
 
 export default async function AdminHome() {
+  await requireRole("admin"); // wajib di halaman: layout bisa dilewati lewat request RSC
   const [{ rows }, { rows: pending }, { rows: latest }] = await Promise.all([
     query("admin/stats"),
     query("stores/list-by-status", ["pending"]),

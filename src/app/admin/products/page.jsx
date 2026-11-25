@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { Package } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 import { query } from "@/lib/db";
+import { requireRole } from "@/lib/auth";
 import { formatRupiah, imageUrl } from "@/lib/format";
 import { deleteProductAdminAction } from "@/lib/actions/products";
 import Badge from "@/components/ui/Badge";
@@ -29,6 +30,7 @@ function DeleteButton({ p }) {
 }
 
 export default async function AdminProductsPage({ searchParams }) {
+  await requireRole("admin"); // wajib di halaman: layout bisa dilewati lewat request RSC
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q.trim() : "";
   const { rows } = await query("products/list-admin", [q === "" ? null : q]);
