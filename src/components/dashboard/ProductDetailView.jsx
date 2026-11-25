@@ -7,8 +7,8 @@ import RatingStars from "@/components/shop/RatingStars";
 import StockLabel from "@/components/shop/StockLabel";
 import { formatDate, formatRupiah, imageUrl } from "@/lib/format";
 
-const STORE_TONE = { pending: "amber", approved: "emerald", rejected: "red" };
-const STORE_LABEL = { pending: "Pending", approved: "Approved", rejected: "Rejected" };
+const STORE_TONE = { pending: "amber", approved: "emerald", rejected: "red", suspended: "orange" };
+const STORE_LABEL = { pending: "Pending", approved: "Approved", rejected: "Rejected", suspended: "Ditangguhkan" };
 
 // Info produk (hanya lihat) di dalam dashboard Seller/Admin. Tombol aksi diberikan lewat `actions`.
 export default function ProductDetailView({ product: p, reviews, breadcrumb, actions, showStore = false }) {

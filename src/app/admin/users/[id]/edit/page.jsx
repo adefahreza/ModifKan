@@ -11,8 +11,8 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Edit Pengguna — ModifKan" };
 
 const ROLE_TONE = { buyer: "blue", seller: "violet" };
-const STORE_TONE = { pending: "amber", approved: "emerald", rejected: "red" };
-const STORE_LABEL = { pending: "Pending", approved: "Approved", rejected: "Rejected" };
+const STORE_TONE = { pending: "amber", approved: "emerald", rejected: "red", suspended: "orange" };
+const STORE_LABEL = { pending: "Pending", approved: "Approved", rejected: "Rejected", suspended: "Ditangguhkan" };
 
 function initials(name) {
   return name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase();

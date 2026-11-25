@@ -10,8 +10,8 @@ import { deleteUserAction } from "@/lib/actions/users";
 
 export const metadata = { title: "Pengguna — ModifKan" };
 
-const STORE_TONE = { pending: "amber", approved: "emerald", rejected: "red" };
-const STORE_LABEL = { pending: "Pending", approved: "Approved", rejected: "Rejected" };
+const STORE_TONE = { pending: "amber", approved: "emerald", rejected: "red", suspended: "orange" };
+const STORE_LABEL = { pending: "Pending", approved: "Approved", rejected: "Rejected", suspended: "Ditangguhkan" };
 
 function Actions({ u }) {
   return (
