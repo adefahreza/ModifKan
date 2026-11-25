@@ -7,7 +7,7 @@ const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
 try {
   await client.connect();
   for (const file of ['schema.sql', 'seed.sql']) {
-    const sql = fs.readFileSync(path.join(process.cwd(), 'db', file), 'utf8');
+    const sql = fs.readFileSync(path.join(process.cwd(), 'src', 'db', file), 'utf8');
     await client.query(sql);
     console.log(`OK: ${file}`);
   }

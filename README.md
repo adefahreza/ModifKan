@@ -71,7 +71,7 @@ flowchart LR
   B[Browser] --> P["proxy.js<br/>cek cookie session"]
   P --> N["Halaman, server action,<br/>route handler"]
   N --> A["Cek peran<br/>dan validasi"]
-  A --> Q["db/queries/*.sql"]
+  A --> Q["src/db/queries/*.sql"]
   Q --> D[(PostgreSQL)]
   N --> U[/uploads/]
 ```
@@ -106,7 +106,7 @@ stateDiagram-v2
 - **Checkout dalam satu transaksi:** baris keranjang dan produk dikunci (`FOR UPDATE`). Kalau satu item gagal, tidak ada pesanan yang dibuat.
 - **Transisi status dijaga di SQL:** query hanya mengubah baris yang masih berada di status asal.
 - **Kepemilikan dicek di query,** bukan hanya disembunyikan di tampilan.
-- **Tanpa ORM:** setiap query berada di `db/queries/`, satu perintah per file, dengan parameter `$1…`.
+- **Tanpa ORM:** setiap query berada di `src/db/queries/`, satu perintah per file, dengan parameter `$1…`.
 - **Password** di-hash dengan bcryptjs. Session disimpan di database dan dikirim lewat cookie `httpOnly`.
 - **Foto KTP** hanya disajikan ke Admin lewat `/api/ktp/...`.
 
@@ -146,7 +146,7 @@ erDiagram
   order_items ||--o| reviews : dinilai
 ```
 
-Definisi lengkap ada di [`db/schema.sql`](db/schema.sql).
+Definisi lengkap ada di [`src/db/schema.sql`](src/db/schema.sql).
 
 ## Cara menjalankan
 
@@ -163,8 +163,8 @@ cd ModifKan
 
 1. Klik kanan **Databases** → **Create** → **Database…**, beri nama `modifkan`, lalu **Save**.
 2. Klik database `modifkan`, lalu buka **Query Tool**.
-3. Buka file `db/schema.sql`, lalu jalankan (F5).
-4. Buka file `db/seed.sql`, lalu jalankan (F5).
+3. Buka file `src/db/schema.sql`, lalu jalankan (F5).
+4. Buka file `src/db/seed.sql`, lalu jalankan (F5).
 
 > `schema.sql` menghapus tabel lama sebelum membuatnya kembali, jadi semua data di database tersebut akan hilang.
 
@@ -234,11 +234,11 @@ npm run db:reset
 <summary><b>Lihat struktur</b></summary>
 
 ```
-db/
-  schema.sql          tabel dan relasi
-  seed.sql            data awal dan akun demo
-  queries/            query aplikasi: <domain>/<aksi>.sql
 src/
+  db/
+    schema.sql        tabel dan relasi
+    seed.sql          data awal dan akun demo
+    queries/          query aplikasi: <domain>/<aksi>.sql
   app/
     (shop)/           beranda, produk, keranjang, checkout
     (auth)/           masuk dan daftar

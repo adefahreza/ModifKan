@@ -9,7 +9,7 @@ export function loadSql(name) {
     throw new Error(`Nama query tidak valid: ${name}`);
   }
   if (cache.has(name)) return cache.get(name);
-  const file = path.join(process.cwd(), 'db', 'queries', `${name}.sql`);
+  const file = path.join(process.cwd(), 'src', 'db', 'queries', `${name}.sql`);
   let text;
   try {
     text = fs.readFileSync(file, 'utf8');
