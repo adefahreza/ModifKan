@@ -64,3 +64,4 @@ AGENTS.md
 playwright.config.js
 /db/queries/testing/
 /scripts/fetch-seed-photos.sh
+/db/migrations/
